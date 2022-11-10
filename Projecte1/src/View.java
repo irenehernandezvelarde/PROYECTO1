@@ -27,6 +27,7 @@ public class View extends JFrame {
 	
 	public View() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(0,0,500,500);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
