@@ -22,10 +22,10 @@ public class DataBase {
         // Connectar (crea la BBDD si no existeix)
         Connection conn = UtilsSQLite.connect(filePath);
 
-        // Esborrar la taula (per si existeix)
+        // Borrar la tabla (por si ya existe)
         UtilsSQLite.queryUpdate(conn, "DROP TABLE IF EXISTS userCredentials;");
 
-        // Crear una nova taula
+        // Crear una nueva tabla
         UtilsSQLite.queryUpdate(conn, "CREATE TABLE IF NOT EXISTS userCredentials ("
                                     + "	id integer PRIMARY KEY AUTOINCREMENT,"
                                     + "	name string NOT NULL"
