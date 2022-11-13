@@ -67,8 +67,6 @@ public class Model {
 				if(node.getNodeType() == Node.ELEMENT_NODE) {
 					elm = (Element) node;
 					
-					System.out.println(elm.getNodeName());
-					
 					switch (elm.getNodeName()) {
 					
 					case "switch":
