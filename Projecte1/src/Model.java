@@ -20,10 +20,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-
-
-
-
 public class Model {
 //Clase on es gestionen totes les dades necessaries per al funcionament de l'aplicacio
 	
@@ -65,7 +61,7 @@ public class Model {
 			for (int b = 0; b < controlsNodes.getLength(); b++) {
 				Node node = controlsNodes.item(b); //Control específic del bloc
 				if(node.getNodeType() == Node.ELEMENT_NODE) {
-					elm = (Element) node;
+					elm = (Element) node; 
 					
 					switch (elm.getNodeName()) {
 					
@@ -79,6 +75,11 @@ public class Model {
 						break;
 					
 					case "slider":
+						if ((Double.parseDouble(elm.getAttribute("min"))) > (Double.parseDouble(elm.getAttribute("max")))){
+							System.out.println("\nERROR: Minimum_value_cant_be_greater_than_Maximum"
+											 + "\n-Slider generation aborted");
+							break;
+						}
 						CSlider nSlider = new CSlider();
 						nSlider.setId(Integer.parseInt(elm.getAttribute("id")));
 						nSlider.setConversionFactor(Double.parseDouble(elm.getAttribute("step")));
@@ -92,8 +93,16 @@ public class Model {
 					    nSlider.setPaintLabels(true);
 						
 						nSlider.setMinorTickSpacing((int) (Double.parseDouble(elm.getAttribute("step"))*nSlider.getConversionFactor())); nSlider.setSnapToTicks(true);
-						nSlider.setValue((int) (Double.parseDouble(elm.getAttribute("default"))*nSlider.getConversionFactor()));
-					    nSlider.setName(elm.getTextContent());
+
+						if (((int) (Double.parseDouble(elm.getAttribute("default")))) > (Double.parseDouble(elm.getAttribute("max")))) {
+							System.out.println("\nERROR: Default_value_cant_be_greater_than_Maximum"
+									 		 + "\n-Slider default option set to min");
+							nSlider.setValue(nSlider.getMinimum());
+						} else {
+							nSlider.setValue((int) (Double.parseDouble(elm.getAttribute("default"))*nSlider.getConversionFactor()));
+						}
+						
+						nSlider.setName(elm.getTextContent());
 					    ncontrolBlock.add(nSlider);
 						break;
 					
@@ -109,11 +118,21 @@ public class Model {
 							nDropdownOption.setText(optionElm.getTextContent());
 							nDropdown.addOption(nDropdownOption);
 						}
-						//nDropdown.setSelectedIndex((int)Double.parseDouble(elm.getAttribute("default")));
+						if (nDropdown.getModel().getSize() < (int)Double.parseDouble(elm.getAttribute("default"))) {
+							System.out.println("\nERROR: Default_index_out_of_bounds"
+											 + "\n-Dropdown default selection set to 0");
+						} else {
+							nDropdown.setSelectedIndex((int)Double.parseDouble(elm.getAttribute("default")));
+						}
 						ncontrolBlock.add(nDropdown);
 						break;
 					
 					case "sensor": //Label con el valor + ºC
+						if ((int)Double.parseDouble(elm.getAttribute("thresholdlow")) > ((int)Double.parseDouble(elm.getAttribute("thresholdhigh")))) {
+							System.out.println("\nERROR: Threshold_low_cant_be_greater_than_threshold_high"
+									 		 + "\n-Sensor generation aborted");
+							break;
+						}
 						CSensor nSensor = new CSensor();
 						nSensor.setId(Integer.parseInt(elm.getAttribute("id")));
 						nSensor.setUnit(elm.getAttribute("units"));
@@ -135,14 +154,14 @@ public class Model {
 		}//for per cada bloc de components
 		
 		//TO REMOVE Impressio del model de dades resultant
-		System.out.println("DATA MODEL");
+		System.out.println("\nDATA MODEL");
 		for (int a = 0 ; a < controls.size() ; a++) {
 			System.out.println("\nBloc: " + controls.get(a).getName());
 			for (int b = 0 ; b < controls.get(a).size() ; b++) {
 				System.out.println(controls.get(a).get(b).toString());
 			}
 		}
-		System.out.println("DATA MODEL FINISHED PRINTING");
+		System.out.println("\nDATA MODEL FINISHED PRINTING");
 		
 	}// m carregarConfiguracio
 
@@ -164,7 +183,7 @@ class ControlsBlock extends ArrayList<Object> {
 	public String getName() {return name;}
 }
 
-//CLASES 'CUSTOM CONTROL' (cClasecontrol)
+//CLASES 'CUSTOM CONTROL' (cClasecontrol) Components grafics personalitzats
 
 class CSwitch extends JToggleButton{
 	private int id;
