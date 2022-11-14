@@ -1,5 +1,6 @@
 import java.awt.EventQueue;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -7,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -42,13 +44,17 @@ public class View extends JFrame {
 		//CONFIG JFRAME
 		contentPane = new JPanel();
 		setContentPane(contentPane);
-		contentPane.setLayout(new BoxLayout(contentPane,BoxLayout.Y_AXIS));
+		contentPane.setLayout(new GridLayout(4, 1, 0, 0));
 		
+	    Border blackline = BorderFactory.createLineBorder(Color.black);
+	    
 		JPanel panelSwitches = new JPanel();
 		panelSwitches.setLayout(new BoxLayout(panelSwitches,BoxLayout.Y_AXIS));
+		//panelSwitches.setBorder(blackline);
 		
 		JPanel panelSliders = new JPanel();
 		panelSliders.setLayout(new BoxLayout(panelSliders,BoxLayout.Y_AXIS));
+		//panelSliders.setBorder(BorderFactory.createLineBorder(Color.black));
 		
 		JPanel panelComboBoxs = new JPanel();
 		panelComboBoxs.setLayout(new BoxLayout(panelComboBoxs,BoxLayout.Y_AXIS));
@@ -99,36 +105,33 @@ public class View extends JFrame {
 					for (int b = 0; b<a.size(); b++) {
 						System.out.println(a.get(b).getClass());
 						switch(String.valueOf(a.get(b).getClass())) {
-						//
 						case "class CSwitch":
 							JToggleButton toggleButton = (JToggleButton) a.get(b);
 							panelSwitches.add(toggleButton);
+							//toggleButton.setPreferredSize(new Dimension((int) (panelSwitches.getPreferredSize().getWidth()),10));
 							break;
 						case "class CSlider":
 							CSlider n = (CSlider) a.get(b);
-							n.setPreferredSize(new Dimension(500, 50));
+							//n.setPreferredSize(new Dimension(500, 50));
 							panelSliders.add(n);
 							break;
 						case "class CDropdown":
-							CDropdown combo = (CDropdown) a.get(b);
-							for (int num = 0 ; num < combo.getModel().getSize() ; num++) {
-								System.out.println(combo.getModel().getElementAt(num));
-							}
+							CDropdown combo =  (CDropdown) a.get(b);
+							//Dimension d = new Dimension(120, 20);
+							//combo.setSize(d);
+							//combo.setMaximumSize(d);
+							//combo.setPreferredSize(d);
 							panelComboBoxs.add(combo);
 					        break;
 						case "class CSensor":
 							CSensor label = (CSensor) a.get(b);
-							label.setBackground(Color.pink);
-							label.setVisible(true);
 							panelLabels.add(label);
 					        break;
 						}
-							
 					}
 				}
 				contentPane.revalidate();
 			}});
-		
 		menuArxiu.add(itemCarregaConf);		
 	}
 
