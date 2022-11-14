@@ -44,7 +44,7 @@ public class View extends JFrame {
 		//CONFIG JFRAME
 		contentPane = new JPanel();
 		setContentPane(contentPane);
-		contentPane.setLayout(new GridLayout(4, 1, 0, 0));
+		contentPane.setLayout(new GridLayout(4,5,0,0));
 		
 	    Border blackline = BorderFactory.createLineBorder(Color.black);
 	    
@@ -61,10 +61,10 @@ public class View extends JFrame {
         
 		JPanel panelLabels = new JPanel();
 		panelLabels.setLayout(new BoxLayout(panelLabels,BoxLayout.Y_AXIS));
-		
-        contentPane.add(panelSwitches);
-        contentPane.add(panelSliders);
+		contentPane.add(panelSliders);
         contentPane.add(panelComboBoxs);
+
+        contentPane.add(panelSwitches);
         contentPane.add(panelLabels);
         
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
