@@ -244,7 +244,7 @@ class CSwitch extends JToggleButton{
 	public void setId(int id) {this.id = id;}
 	public int getId() {return id;}
 	
-	public String toString() {return "Id: " + id + " 	Default: " + this.isSelected() + " 	Text: " + this.getText();}
+	public String toString() {return "Id: " + id + " | Default: " + this.isSelected() + " | Text: " + this.getText();}
 }
 
 //CSlider pot representar nombres decimals, pero s'ha de definir el ConversionFactor (metode setConversionFactor) a partir del minorTickSpacing
@@ -264,7 +264,7 @@ class CSlider extends JSlider{
 	}
 	public int getConversionFactor() {return conversionFactor;}
 	
-	public String toString() {return "Id: " + id + " 	Default: " + this.getValue() + " 	Min: " + this.getMinimum() + " 	Max: " + this.getMaximum() + " 	Step: " + this.getMinorTickSpacing() + " 	(SENSE APLICAR CONVERSIONFACTOR)";}
+	public String toString() {return "Id: " + id + " | Default: " + this.getValue() + " | Min: " + this.getMinimum() + " | Max: " + this.getMaximum() + " | Step: " + this.getMinorTickSpacing() + " | (SENSE APLICAR CONVERSIONFACTOR: /" + this.conversionFactor + ")";}
 }
 
 class CDropdown extends JComboBox{
@@ -312,9 +312,9 @@ class CDropdown extends JComboBox{
 	public String toString() {
 		String OptionsToString = "";
 		for (int a = 0 ; a < dropdownOptions.length ; a++) {
-			OptionsToString += "\n	Option index: " + a + " 	" + dropdownOptions[a].toString();
+			OptionsToString += "\n - Option index: " + a + " | " + dropdownOptions[a].toString();
 		}
-		return "Id: " + id + " 	Default: " + this.getSelectedIndex() + " 	" + OptionsToString;}
+		return "Id: " + id + " | Default: " + this.getSelectedIndex() + " | " + OptionsToString;}
 }
 class CDropdownOption {
 	private int optionId;
@@ -325,7 +325,7 @@ class CDropdownOption {
 	public void setText(String text){this.text = text;}
 	public String getText(){return text;}
 	
-	public String toString() {return "Id: " + optionId + " 	Text: " + text;}
+	public String toString() {return "Id: " + optionId + " | Text: " + text;}
 }
 
 class CSensor extends JLabel{
@@ -346,6 +346,6 @@ class CSensor extends JLabel{
 	public int getThresholdHigh() {return thresholdHigh;}
 	
 	public String toString() {
-		return "Id: " + id + " 	Unit: " + unit + " 	Treshold Low: " + thresholdLow + " 	Treshold High: " + thresholdHigh + " 	Text: " + this.getText();
+		return "Id: " + id + " | Unit: " + unit + " | Treshold Low: " + thresholdLow + " | Treshold High: " + thresholdHigh + " | Text: " + this.getText();
 	}
 }
