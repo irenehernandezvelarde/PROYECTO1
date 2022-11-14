@@ -40,6 +40,7 @@ public class Model {
         	e.printStackTrace(); 
         } catch (SAXException e) { 
         	e.printStackTrace();
+        	System.out.println("SAXY");
         } catch (IOException e) { 
         	e.printStackTrace(); 
         }
@@ -137,7 +138,7 @@ public class Model {
 								//setMinimum i setMaximum (i tots els valors entre mitj)
 							Hashtable<Integer,JLabel> labelTable = new Hashtable<Integer,JLabel>();
 							for (int c = ((int) (min*nSlider.getConversionFactor())); c < (max*nSlider.getConversionFactor()) ; c += (step*nSlider.getConversionFactor())){
-							    labelTable.put(c, new JLabel(String.valueOf(c/nSlider.getConversionFactor())));
+							    labelTable.put(c, new JLabel(String.valueOf(Double.valueOf(c)/nSlider.getConversionFactor())));
 							}
 						    nSlider.setLabelTable( labelTable );
 						    nSlider.setPaintLabels(true);
@@ -193,6 +194,7 @@ public class Model {
 							nSensor.setThresholdLow(thresholdLow.intValue());
 							nSensor.setThresholdHigh(thresholdHigh.intValue());
 							nSensor.setText(text);
+							nSensor.setVisible(true);
 							ncontrolBlock.add(nSensor);
 							break;
 						
@@ -222,6 +224,10 @@ public class Model {
 	public void setFile(File File) {//Estableix el fitxer a on es troben les dades de l'aplicacio
 		file = File;
 	}// m setFile
+	
+	public ArrayList<ControlsBlock> getControls() {
+		return controls;
+	}//m getControls
 	
 }
 

@@ -12,6 +12,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 
 public class View extends JFrame {
 
@@ -61,6 +62,13 @@ public class View extends JFrame {
 				
 				//CARREGUEM DADES DEL FITXER
 				model.carregarConfiguracio();
+				
+				for (ArrayList a : model.getControls()) {
+					for (int b = 0; b<a.size(); b++) {
+						System.out.println(a.get(b).getClass());
+					}
+				}
+				//
 				
 			}});
 		menuArxiu.add(itemCarregaConf);
