@@ -306,11 +306,11 @@ class CDropdown extends JComboBox{
 		updateDropdownOptions();
 	}
 	private void updateDropdownOptions() {
-		String[] optionNames = new String[dropdownOptions.length-1];
+		String[] optionNames = new String[dropdownOptions.length];
 		for (int a = 0; a < optionNames.length ; a++) {
 			optionNames[a] = dropdownOptions[a].getText();
 		}
-		this.setModel(new DefaultComboBoxModel(optionNames));
+		this.setModel(new DefaultComboBoxModel<String>(optionNames));
 	}
 	public CDropdownOption[] getOptions() {
 		return dropdownOptions;

@@ -103,29 +103,24 @@ public class View extends JFrame {
 						case "class CSwitch":
 							JToggleButton toggleButton = (JToggleButton) a.get(b);
 							panelSwitches.add(toggleButton);
-							contentPane.repaint();
 							break;
 						case "class CSlider":
 							CSlider n = (CSlider) a.get(b);
 							n.setPreferredSize(new Dimension(500, 50));
 							panelSliders.add(n);
-					        contentPane.repaint();
 							break;
 						case "class CDropdown":
-							JComboBox combo = (JComboBox) a.get(b);
-							combo.setPreferredSize(new Dimension(10, 10));
-							combo.setSize(getPreferredSize());
+							CDropdown combo = (CDropdown) a.get(b);
+							for (int num = 0 ; num < combo.getModel().getSize() ; num++) {
+								System.out.println(combo.getModel().getElementAt(num));
+							}
 							panelComboBoxs.add(combo);
-							panelLabels.repaint();
-					        contentPane.repaint();
 					        break;
 						case "class CSensor":
 							CSensor label = (CSensor) a.get(b);
 							label.setBackground(Color.pink);
 							label.setVisible(true);
 							panelLabels.add(label);
-							panelLabels.repaint();
-					        contentPane.repaint();
 					        break;
 						}
 							
