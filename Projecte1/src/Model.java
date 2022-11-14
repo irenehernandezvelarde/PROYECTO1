@@ -53,104 +53,158 @@ public class Model {
 		NodeList controlBlocksNodes = doc.getElementsByTagName("controls"); //Llista dels blocs de controls
 		for(int a = 0; a < controlBlocksNodes.getLength(); a ++) {
 			Element elm = (Element) controlBlocksNodes.item(a);
+			
+			//Creacio bloc de controls
 			ControlsBlock ncontrolBlock = new ControlsBlock();
 			ncontrolBlock.setName(elm.getAttribute("name"));
 			
-			//Insercio de components
+			//Creacio de components i insercio al bloc
 			NodeList controlsNodes = (NodeList)controlBlocksNodes.item(a); //Llista dels controls del bloc (switch/slider/dropdown/sensor/...)
 			for (int b = 0; b < controlsNodes.getLength(); b++) {
 				Node node = controlsNodes.item(b); //Control específic del bloc
 				if(node.getNodeType() == Node.ELEMENT_NODE) {
 					elm = (Element) node; 
 					
+					int id;
+					String defaultString;
+					Double defaultDouble;
+					int defaultInt;
+					String text;
+					Double min;
+					Double max;
+					Double step;
+					String unit;
+					Double thresholdLow;
+					Double thresholdHigh;
+					
 					switch (elm.getNodeName()) {
 					
-					case "switch":
-						CSwitch nSwitch = new CSwitch();
-						nSwitch.setId(Integer.parseInt(elm.getAttribute("id")));
-						if (elm.getAttribute("default").contentEquals("on")) {nSwitch.setSelected(true);
-						} else {nSwitch.setSelected(false);}
-						nSwitch.setText(elm.getTextContent());
-						ncontrolBlock.add(nSwitch);
-						break;
-					
-					case "slider":
-						if ((Double.parseDouble(elm.getAttribute("min"))) > (Double.parseDouble(elm.getAttribute("max")))){
-							System.out.println("\nERROR: Minimum_value_cant_be_greater_than_Maximum"
-											 + "\n-Slider generation aborted");
+						case "switch":
+							//VARIABLES
+							id = Integer.parseInt(elm.getAttribute("id"));
+							defaultString = elm.getAttribute("default");
+							text = elm.getTextContent();
+							//CONTROL D'ERRORS (VALORS INVALIDS)
+							if (!defaultString.contentEquals("on") && !defaultString.contentEquals("off")) {
+								System.out.println("\nERROR: Unknown_default_toggle_value"
+										 + "\n-Toggle default option set to off");
+								defaultString = "off";
+								break;
+							}
+							//CREACIÓ COMPONENT
+							CSwitch nSwitch = new CSwitch();
+							nSwitch.setId(id);
+							if (defaultString.contentEquals("on")) {nSwitch.setSelected(true);
+							} else {nSwitch.setSelected(false);}
+							nSwitch.setText(text);
+							ncontrolBlock.add(nSwitch);
 							break;
-						}
-						CSlider nSlider = new CSlider();
-						nSlider.setId(Integer.parseInt(elm.getAttribute("id")));
-						nSlider.setConversionFactor(Double.parseDouble(elm.getAttribute("step")));
 						
-						//setMaximum i setMinimum
-						Hashtable<Integer,JLabel> labelTable = new Hashtable<Integer,JLabel>();
-						for (int c = ((int) (Double.parseDouble(elm.getAttribute("min"))*nSlider.getConversionFactor())); c < ((int) (Double.parseDouble(elm.getAttribute("max"))*nSlider.getConversionFactor())) ; c += (Double.parseDouble(elm.getAttribute("step"))*nSlider.getConversionFactor())){
-						    labelTable.put(c, new JLabel(String.valueOf(c/nSlider.getConversionFactor())));
-						}
-					    nSlider.setLabelTable( labelTable );
-					    nSlider.setPaintLabels(true);
-						
-						nSlider.setMinorTickSpacing((int) (Double.parseDouble(elm.getAttribute("step"))*nSlider.getConversionFactor())); nSlider.setSnapToTicks(true);
-
-						if (((int) (Double.parseDouble(elm.getAttribute("default")))) > (Double.parseDouble(elm.getAttribute("max")))) {
-							System.out.println("\nERROR: Default_value_cant_be_greater_than_Maximum"
-									 		 + "\n-Slider default option set to min");
-							nSlider.setValue(nSlider.getMinimum());
-						} else {
-							nSlider.setValue((int) (Double.parseDouble(elm.getAttribute("default"))*nSlider.getConversionFactor()));
-						}
-						
-						nSlider.setName(elm.getTextContent());
-					    ncontrolBlock.add(nSlider);
-						break;
-					
-					case "dropdown":
-						CDropdown nDropdown = new CDropdown();
-						nDropdown.setId(Integer.parseInt(elm.getAttribute("id")));
-						NodeList dropdownOpts = (NodeList) elm.getElementsByTagName("option");
-						for (int c = 0; c < dropdownOpts.getLength() ; c++) {
-							Node optionNode = dropdownOpts.item(c);
-							Element optionElm = (Element) optionNode;
-							CDropdownOption nDropdownOption = new CDropdownOption();
-							nDropdownOption.setOptionId(Integer.parseInt(optionElm.getAttribute("value")));
-							nDropdownOption.setText(optionElm.getTextContent());
-							nDropdown.addOption(nDropdownOption);
-						}
-						if (nDropdown.getModel().getSize() < (int)Double.parseDouble(elm.getAttribute("default"))) {
-							System.out.println("\nERROR: Default_index_out_of_bounds"
-											 + "\n-Dropdown default selection set to 0");
-						} else {
-							nDropdown.setSelectedIndex((int)Double.parseDouble(elm.getAttribute("default")));
-						}
-						ncontrolBlock.add(nDropdown);
-						break;
-					
-					case "sensor": //Label con el valor + ºC
-						if ((int)Double.parseDouble(elm.getAttribute("thresholdlow")) > ((int)Double.parseDouble(elm.getAttribute("thresholdhigh")))) {
-							System.out.println("\nERROR: Threshold_low_cant_be_greater_than_threshold_high"
-									 		 + "\n-Sensor generation aborted");
+						case "slider":
+							//VARIABLES
+							id = Integer.parseInt(elm.getAttribute("id"));
+							defaultDouble = Double.parseDouble(elm.getAttribute("default"));
+							min = Double.parseDouble(elm.getAttribute("min"));
+							max = Double.parseDouble(elm.getAttribute("max"));
+							step = Double.parseDouble(elm.getAttribute("step"));
+							text = elm.getTextContent();
+							//CONTROL D'ERRORS (VALORS INVALIDS)
+							if (min > max){
+								System.out.println("\nERROR: Minimum_value_cant_be_greater_than_Maximum"
+												 + "\n-Slider generation ABORTED");
+								break;
+							}
+							if (defaultDouble < min || defaultDouble > max ) {
+								System.out.println("\nERROR: Default_value_out_of_bounds"
+										 		 + "\n-Slider default option set to min");
+								defaultDouble = min;
+							}
+							if (step > (max-min)) {
+								System.out.println("\nERROR: Step_can't_be_greater_than_the_number_of_values_between_min_and_max"
+								 		 		 + "\n-Slider generation ABORTED");
+								System.out.println("Step: " + step + " Step max value: " + (max-min));
+								break;
+							}
+							if (max%step != 0 || min%step != 0) {
+								System.out.println("\nERROR: Step_uneven_relative_to_min_and_max_values"
+								 		 		 + "\n-Slider generation ABORTED");
+								break;
+							}
+							//CREACIO COMPONENT
+							CSlider nSlider = new CSlider();
+							nSlider.setId(id);
+							nSlider.setConversionFactor(step); //Necessari per a mostrar decimals
+								//setMinimum i setMaximum (i tots els valors entre mitj)
+							Hashtable<Integer,JLabel> labelTable = new Hashtable<Integer,JLabel>();
+							for (int c = ((int) (min*nSlider.getConversionFactor())); c < (max*nSlider.getConversionFactor()) ; c += (step*nSlider.getConversionFactor())){
+							    labelTable.put(c, new JLabel(String.valueOf(c/nSlider.getConversionFactor())));
+							}
+						    nSlider.setLabelTable( labelTable );
+						    nSlider.setPaintLabels(true);
+								//--- fi setMinimum i setMaximum ---
+						    nSlider.setValue((int) (defaultDouble*nSlider.getConversionFactor()));
+							nSlider.setMinorTickSpacing((int)(step*nSlider.getConversionFactor())); nSlider.setSnapToTicks(true);
+							nSlider.setName(text);
+						    ncontrolBlock.add(nSlider);
 							break;
-						}
-						CSensor nSensor = new CSensor();
-						nSensor.setId(Integer.parseInt(elm.getAttribute("id")));
-						nSensor.setUnit(elm.getAttribute("units"));
-						nSensor.setThresholdLow((int)Double.parseDouble(elm.getAttribute("thresholdlow")));
-						nSensor.setThresholdHigh((int)Double.parseDouble(elm.getAttribute("thresholdhigh")));
-						nSensor.setText(elm.getTextContent());
-						ncontrolBlock.add(nSensor);
-						break;
-					
-					default:
-						System.out.println("\nERROR: Unknown_control_type"
-										 + "\nControl type: " + elm.getNodeName());
-						break;
+						
+						case "dropdown":
+							//VARIABLES
+							id = Integer.parseInt(elm.getAttribute("id"));
+							defaultInt = Integer.parseInt(elm.getAttribute("default"));
+							//CREACIO COMPONENT + CONTROL D'ERRORS (VALORS INVALIDS)
+							CDropdown nDropdown = new CDropdown();
+							nDropdown.setId(id);
+								//Opcions
+							NodeList dropdownOpts = (NodeList) elm.getElementsByTagName("option");
+							for (int c = 0; c < dropdownOpts.getLength() ; c++) {
+								Node optionNode = dropdownOpts.item(c);
+								Element optionElm = (Element) optionNode;
+								CDropdownOption nDropdownOption = new CDropdownOption();
+								nDropdownOption.setOptionId(Integer.parseInt(optionElm.getAttribute("value")));
+								nDropdownOption.setText(optionElm.getTextContent());
+								nDropdown.addOption(nDropdownOption);
+							}
+								//--- Fi Opcions ---
+							if (nDropdown.getModel().getSize() < defaultInt) {
+								System.out.println("\nERROR: Default_index_out_of_bounds"
+												 + "\n-Dropdown default selection set to 0");
+							} else { nDropdown.setSelectedIndex(defaultInt); }
+							ncontrolBlock.add(nDropdown);
+							break;
+						
+						case "sensor": //Label amb el text igual a : "valor" + "unit"
+							//VARIABLES
+							id = Integer.parseInt(elm.getAttribute("id"));
+							unit = elm.getAttribute("units");
+							thresholdLow = Double.parseDouble(elm.getAttribute("thresholdlow"));
+							thresholdHigh = Double.parseDouble(elm.getAttribute("thresholdhigh"));
+							text = elm.getTextContent();
+							//CONTROL D'ERRORS (VALORS INVALIDS)
+							if (thresholdLow.intValue() > thresholdHigh.intValue()) {
+								System.out.println("\nERROR: Threshold_low_cant_be_greater_than_threshold_high"
+										 		 + "\n-Sensor generation ABORTED");
+								break;
+							}
+							//CREACIO COMPONENT
+							CSensor nSensor = new CSensor();
+							nSensor.setId(id);
+							nSensor.setUnit(unit);
+							nSensor.setThresholdLow(thresholdLow.intValue());
+							nSensor.setThresholdHigh(thresholdHigh.intValue());
+							nSensor.setText(text);
+							ncontrolBlock.add(nSensor);
+							break;
+						
+						default:
+							System.out.println("\nERROR: Unknown_control_type"
+											 + "\nControl type: " + elm.getNodeName());
+							break;
 					}//switch
 				}//if node es element
 				
 			}//for per a cada component
-			controls.add(ncontrolBlock);
+			controls.add(ncontrolBlock);//Insercio del bloc de controls al model
 		}//for per cada bloc de components
 		
 		//TO REMOVE Impressio del model de dades resultant
