@@ -12,6 +12,7 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JMenu;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -42,33 +43,14 @@ public class View extends JFrame {
 	}
 	public View() {
 		//CONFIG JFRAME
-		contentPane = new JPanel();
-		setContentPane(contentPane);
-		contentPane.setLayout(new GridLayout(4,5,0,0));
-		
-	    Border blackline = BorderFactory.createLineBorder(Color.black);
-	    
-		JPanel panelSwitches = new JPanel();
-		panelSwitches.setLayout(new BoxLayout(panelSwitches,BoxLayout.Y_AXIS));
-		//panelSwitches.setBorder(blackline);
-		
-		JPanel panelSliders = new JPanel();
-		panelSliders.setLayout(new BoxLayout(panelSliders,BoxLayout.Y_AXIS));
-		//panelSliders.setBorder(BorderFactory.createLineBorder(Color.black));
-		
-		JPanel panelComboBoxs = new JPanel();
-		panelComboBoxs.setLayout(new BoxLayout(panelComboBoxs,BoxLayout.Y_AXIS));
-        
-		JPanel panelLabels = new JPanel();
-		panelLabels.setLayout(new BoxLayout(panelLabels,BoxLayout.Y_AXIS));
-		contentPane.add(panelSliders);
-        contentPane.add(panelComboBoxs);
-
-        contentPane.add(panelSwitches);
-        contentPane.add(panelLabels);
-        
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(0,0,500,500);
+		this.setSize(500, 500);
+		this.setLocationRelativeTo(null);
+		
+		//CONFIG CONTENTPANE
+		contentPane = new JPanel();
+		contentPane.setLayout(new GridLayout(4,5,0,0));
+		setContentPane(contentPane);
 		
 		//CONFIG JMENUBAR
 		JMenuBar menuBar = new JMenuBar();
@@ -98,41 +80,67 @@ public class View extends JFrame {
 				}
 				
 				//CARREGUEM DADES DEL FITXER
-				model.carregarConfiguracio();
-				ArrayList<ControlsBlock> controls = model.getControls();
-				
-				for(ArrayList a: controls) {
-					for (int b = 0; b<a.size(); b++) {
-						System.out.println(a.get(b).getClass());
-						switch(String.valueOf(a.get(b).getClass())) {
-						case "class CSwitch":
-							JToggleButton toggleButton = (JToggleButton) a.get(b);
-							panelSwitches.add(toggleButton);
-							//toggleButton.setPreferredSize(new Dimension((int) (panelSwitches.getPreferredSize().getWidth()),10));
-							break;
-						case "class CSlider":
-							CSlider n = (CSlider) a.get(b);
-							//n.setPreferredSize(new Dimension(500, 50));
-							panelSliders.add(n);
-							break;
-						case "class CDropdown":
-							CDropdown combo =  (CDropdown) a.get(b);
-							//Dimension d = new Dimension(120, 20);
-							//combo.setSize(d);
-							//combo.setMaximumSize(d);
-							//combo.setPreferredSize(d);
-							panelComboBoxs.add(combo);
-					        break;
-						case "class CSensor":
-							CSensor label = (CSensor) a.get(b);
-							panelLabels.add(label);
-					        break;
+				if (model.carregarConfiguracio() == 0) {
+					contentPane.removeAll();
+					
+					//CONFIG GUI
+					Border blackline = BorderFactory.createLineBorder(Color.black);
+				    
+					JPanel panelSwitches = new JPanel();
+					panelSwitches.setLayout(new BoxLayout(panelSwitches,BoxLayout.Y_AXIS));
+					//panelSwitches.setBorder(blackline);
+					
+					JPanel panelSliders = new JPanel();
+					panelSliders.setLayout(new BoxLayout(panelSliders,BoxLayout.Y_AXIS));
+					//panelSliders.setBorder(BorderFactory.createLineBorder(Color.black));
+					
+					JPanel panelComboBoxs = new JPanel();
+					panelComboBoxs.setLayout(new BoxLayout(panelComboBoxs,BoxLayout.Y_AXIS));
+			        
+					JPanel panelLabels = new JPanel();
+					panelLabels.setLayout(new BoxLayout(panelLabels,BoxLayout.Y_AXIS));
+					contentPane.add(panelSliders);
+			        contentPane.add(panelComboBoxs);
+
+			        contentPane.add(panelSwitches);
+			        contentPane.add(panelLabels);
+			        //end GUI
+					
+					ArrayList<ControlsBlock> controls = model.getControls();
+					
+					for(ArrayList a: controls) {
+						for (int b = 0; b<a.size(); b++) {
+							System.out.println(a.get(b).getClass());
+							switch(String.valueOf(a.get(b).getClass())) {
+							case "class CSwitch":
+								JToggleButton toggleButton = (JToggleButton) a.get(b);
+								panelSwitches.add(toggleButton);
+								break;
+							case "class CSlider":
+								CSlider n = (CSlider) a.get(b);
+								panelSliders.add(n);
+								break;
+							case "class CDropdown":
+								CDropdown combo =  (CDropdown) a.get(b);
+								panelComboBoxs.add(combo);
+						        break;
+							case "class CSensor":
+								CSensor label = (CSensor) a.get(b);
+								panelLabels.add(label);
+						        break;
+							}
 						}
 					}
+					contentPane.revalidate();
 				}
-				contentPane.revalidate();
 			}});
 		menuArxiu.add(itemCarregaConf);		
+	
+	}// c View
+	
+	public void showErrorPopup(String errorMessage) {
+		JOptionPane errorPopup = new JOptionPane();
+		errorPopup.showMessageDialog(this, errorMessage);
 	}
-
+	
 }

@@ -28,7 +28,8 @@ public class Model {
 	private Document doc;
 	private ArrayList<ControlsBlock> controls; //controls.get(indexDeBloc).get(indexDeComponent)
 	
-	public void carregarConfiguracio() {//Carrega la configuracio inicial de l'aplicacio des d'un fitxer .xml
+	public int carregarConfiguracio() {//Carrega la configuracio inicial de l'aplicacio des d'un fitxer .xml
+		//Return per a errors (1 amb error / 0 tot correcte)
 		
 		//Obre el fitxer com a xml
 		try {
@@ -39,12 +40,15 @@ public class Model {
         } catch (ParserConfigurationException e) {
         	e.printStackTrace();
         	System.out.println("ERROR 1");
+        	return 1;
         } catch (SAXException e) {
         	e.printStackTrace();
         	System.out.println("ERROR 2");
+        	return 1;
         } catch (IOException e) { 
         	e.printStackTrace(); 
         	System.out.println("ERROR 3");
+        	return 1;
         }
 		
 		//LECTURA DE DADES DE L'XML
@@ -120,18 +124,18 @@ public class Model {
 							if (defaultDouble < min || defaultDouble > max ) {
 								System.out.println("\nERROR: Default_value_out_of_bounds"
 										 		 + "\n-Slider default option set to min");
-								defaultDouble = min;
+								return 1;
 							}
 							if (step > (max-min)) {
 								System.out.println("\nERROR: Step_can't_be_greater_than_the_number_of_values_between_min_and_max"
 								 		 		 + "\n-Slider generation ABORTED");
 								System.out.println("Step: " + step + " Step max value: " + (max-min));
-								break;
+								return 1;
 							}
 							if (max%step != 0 || min%step != 0) {
 								System.out.println("\nERROR: Step_uneven_relative_to_min_and_max_values"
 								 		 		 + "\n-Slider generation ABORTED");
-								break;
+								return 1;
 							}
 							//CREACIO COMPONENT
 							CSlider nSlider = new CSlider();
@@ -139,7 +143,7 @@ public class Model {
 							nSlider.setConversionFactor(step); //Necessari per a mostrar decimals
 								//setMinimum i setMaximum (i tots els valors entre mitj)
 							Hashtable<Integer,JLabel> labelTable = new Hashtable<Integer,JLabel>();
-							for (int c = ((int) (min*nSlider.getConversionFactor())); c < (max*nSlider.getConversionFactor()) ; c += (step*nSlider.getConversionFactor())){
+							for (int c = ((int) (min*nSlider.getConversionFactor())); c <= (max*nSlider.getConversionFactor()) ; c += (step*nSlider.getConversionFactor())){
 							    labelTable.put(c, new JLabel(String.valueOf(Double.valueOf(c)/nSlider.getConversionFactor())));
 							}
 						    nSlider.setLabelTable( labelTable );
@@ -172,6 +176,7 @@ public class Model {
 							if (nDropdown.getModel().getSize() < defaultInt) {
 								System.out.println("\nERROR: Default_index_out_of_bounds"
 												 + "\n-Dropdown default selection set to 0");
+								return 1;
 							} else { nDropdown.setSelectedIndex(defaultInt); }
 							ncontrolBlock.add(nDropdown);
 							break;
@@ -187,7 +192,7 @@ public class Model {
 							if (thresholdLow.intValue() > thresholdHigh.intValue()) {
 								System.out.println("\nERROR: Threshold_low_cant_be_greater_than_threshold_high"
 										 		 + "\n-Sensor generation ABORTED");
-								break;
+								return 1;
 							}
 							//CREACIO COMPONENT
 							CSensor nSensor = new CSensor();
@@ -203,7 +208,7 @@ public class Model {
 						default:
 							System.out.println("\nERROR: Unknown_control_type"
 											 + "\nControl type: " + elm.getNodeName());
-							break;
+							return 1;
 					}//switch
 				}//if node es element
 				
@@ -220,7 +225,7 @@ public class Model {
 			}
 		}
 		System.out.println("\nDATA MODEL FINISHED PRINTING");
-		
+		return 0;
 	}// m carregarConfiguracio
 
 	public void setFile(File File) {//Estableix el fitxer a on es troben les dades de l'aplicacio
