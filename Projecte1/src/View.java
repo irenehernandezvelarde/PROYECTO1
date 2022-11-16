@@ -25,10 +25,12 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class View extends JFrame {
-
-	private JPanel contentPane;
-	private Model model = new Model();
 	
+	//VARIABLES
+	private Model model = new Model(this);
+	private JPanel contentPane;
+	
+	//METODE MAIN
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -40,8 +42,11 @@ public class View extends JFrame {
 				}
 			}
 		});
-	}
+	}// m main 
+	
+	//CONSTRUCTOR (PART IMPORTANT)
 	public View() {
+		
 		//CONFIG JFRAME
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(500, 500);
@@ -49,7 +54,6 @@ public class View extends JFrame {
 		
 		//CONFIG CONTENTPANE
 		contentPane = new JPanel();
-		contentPane.setLayout(new GridLayout(4,5,0,0));
 		setContentPane(contentPane);
 		
 		//CONFIG JMENUBAR
@@ -64,6 +68,7 @@ public class View extends JFrame {
 		JMenu menuVisualitzacions = new JMenu("Visualitzaci\u00F3ns");
 		menuBar.add(menuVisualitzacions);
 		
+		//Item carregar configuracio
 		JMenuItem itemCarregaConf = new JMenuItem("Carregar configuració");
 		itemCarregaConf.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
@@ -83,26 +88,27 @@ public class View extends JFrame {
 				if (model.carregarConfiguracio() == 0) {
 					contentPane.removeAll();
 					
-					//CONFIG GUI
-					Border blackline = BorderFactory.createLineBorder(Color.black);
+					//CONFIGUREM LA GUI A PARTIR DE LES DADES
+					contentPane.setLayout(new GridLayout(4,1,5,5));
 				    
 					JPanel panelSwitches = new JPanel();
 					panelSwitches.setLayout(new BoxLayout(panelSwitches,BoxLayout.Y_AXIS));
-					//panelSwitches.setBorder(blackline);
+					panelSwitches.setBorder(BorderFactory.createTitledBorder("SWITCHES"));
+			        contentPane.add(panelSwitches);
 					
 					JPanel panelSliders = new JPanel();
 					panelSliders.setLayout(new BoxLayout(panelSliders,BoxLayout.Y_AXIS));
-					//panelSliders.setBorder(BorderFactory.createLineBorder(Color.black));
+					panelSliders.setBorder(BorderFactory.createTitledBorder("SLIDERS"));
+					contentPane.add(panelSliders);
 					
 					JPanel panelComboBoxs = new JPanel();
 					panelComboBoxs.setLayout(new BoxLayout(panelComboBoxs,BoxLayout.Y_AXIS));
+					panelComboBoxs.setBorder(BorderFactory.createTitledBorder("DROPDOWNS"));
+			        contentPane.add(panelComboBoxs);
 			        
 					JPanel panelLabels = new JPanel();
 					panelLabels.setLayout(new BoxLayout(panelLabels,BoxLayout.Y_AXIS));
-					contentPane.add(panelSliders);
-			        contentPane.add(panelComboBoxs);
-
-			        contentPane.add(panelSwitches);
+					panelLabels.setBorder(BorderFactory.createTitledBorder("SENSORS"));
 			        contentPane.add(panelLabels);
 			        //end GUI
 					
@@ -135,12 +141,11 @@ public class View extends JFrame {
 				}
 			}});
 		menuArxiu.add(itemCarregaConf);		
-	
 	}// c View
 	
+	//POPUP ERRORS
 	public void showErrorPopup(String errorMessage) {
-		JOptionPane errorPopup = new JOptionPane();
-		errorPopup.showMessageDialog(this, errorMessage);
-	}
+		JOptionPane.showMessageDialog(this, errorMessage);
+	}//m showErrorPopup
 	
 }

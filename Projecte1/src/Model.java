@@ -1,3 +1,5 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -5,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -24,9 +27,14 @@ public class Model {
 //Clase on es gestionen totes les dades necessaries per al funcionament de l'aplicacio
 	
 	//Variables
+	private View view = null;
 	private File file = null;
 	private Document doc;
 	private ArrayList<ControlsBlock> controls; //controls.get(indexDeBloc).get(indexDeComponent)
+	
+	public Model(View view) {
+		this.view = view;
+	}
 	
 	public int carregarConfiguracio() {//Carrega la configuracio inicial de l'aplicacio des d'un fitxer .xml
 		//Return per a errors (1 amb error / 0 tot correcte)
@@ -38,16 +46,16 @@ public class Model {
             doc = dBuilder.parse(file);
 			doc.getDocumentElement().normalize();
         } catch (ParserConfigurationException e) {
+        	view.showErrorPopup("Unknown parser error");
         	e.printStackTrace();
-        	System.out.println("ERROR 1");
         	return 1;
         } catch (SAXException e) {
+        	view.showErrorPopup("Missing tag in xml");
         	e.printStackTrace();
-        	System.out.println("ERROR 2");
         	return 1;
         } catch (IOException e) { 
-        	e.printStackTrace(); 
-        	System.out.println("ERROR 3");
+        	view.showErrorPopup("Unknown exception");
+        	e.printStackTrace();
         	return 1;
         }
 		
@@ -93,17 +101,28 @@ public class Model {
 							text = elm.getTextContent();
 							//CONTROL D'ERRORS (VALORS INVALIDS)
 							if (!defaultString.contentEquals("on") && !defaultString.contentEquals("off")) {
-								System.out.println("\nERROR: Unknown_default_toggle_value"
-										 + "\n-Toggle default option set to off");
-								defaultString = "off";
+								System.out.println("\nERROR: Unknown_default_toggle_value");
+					        	view.showErrorPopup("Unknown default toggle("+id+") value\nAccepted values: on/off");
 								break;
 							}
 							//CREACIÓ COMPONENT
 							CSwitch nSwitch = new CSwitch();
 							nSwitch.setId(id);
-							if (defaultString.contentEquals("on")) {nSwitch.setSelected(true);
-							} else {nSwitch.setSelected(false);}
-							nSwitch.setText(text);
+							if (defaultString.contentEquals("on")) {
+								nSwitch.setSelected(true);
+								nSwitch.setText(defaultString.toUpperCase());
+							} else {
+								nSwitch.setSelected(false);
+								nSwitch.setText(defaultString.toUpperCase());
+							}
+							nSwitch.addActionListener(new ActionListener() {
+								@Override public void actionPerformed(ActionEvent e) {
+									if (nSwitch.isSelected() == true) {
+										nSwitch.setText("ON");
+									} else {nSwitch.setText("OFF");}
+								}
+							});
+							nSwitch.setBorder(BorderFactory.createTitledBorder(text));
 							ncontrolBlock.add(nSwitch);
 							break;
 						
@@ -117,24 +136,24 @@ public class Model {
 							text = elm.getTextContent();
 							//CONTROL D'ERRORS (VALORS INVALIDS)
 							if (min > max){
-								System.out.println("\nERROR: Minimum_value_cant_be_greater_than_Maximum"
-												 + "\n-Slider generation ABORTED");
-								break;
+								System.out.println("\nERROR: Minimum_value_cant_be_greater_than_Maximum");
+					        	view.showErrorPopup("Slider("+id+") minimum value can't be greater than maximum");
+					        	return 1;
 							}
 							if (defaultDouble < min || defaultDouble > max ) {
-								System.out.println("\nERROR: Default_value_out_of_bounds"
-										 		 + "\n-Slider default option set to min");
+								System.out.println("\nERROR: Default_value_out_of_bounds");
+					        	view.showErrorPopup("Slider("+id+") default value out of bounds");
 								return 1;
 							}
 							if (step > (max-min)) {
-								System.out.println("\nERROR: Step_can't_be_greater_than_the_number_of_values_between_min_and_max"
-								 		 		 + "\n-Slider generation ABORTED");
-								System.out.println("Step: " + step + " Step max value: " + (max-min));
+								System.out.println("\nERROR: Step_can't_be_greater_than_the_number_of_values_between_min_and_max");
+					        	view.showErrorPopup("Slider("+id+") step can't be greater than the amount of values between min and max\n" + "Step: " + step + " Step max value: " + (max-min));
+								System.out.println();
 								return 1;
 							}
 							if (max%step != 0 || min%step != 0) {
-								System.out.println("\nERROR: Step_uneven_relative_to_min_and_max_values"
-								 		 		 + "\n-Slider generation ABORTED");
+								System.out.println("\nERROR: Step_uneven_relative_to_min_and_max_values");
+								view.showErrorPopup("Slider("+id+") step uneven relative to min and max values");
 								return 1;
 							}
 							//CREACIO COMPONENT
@@ -151,7 +170,7 @@ public class Model {
 								//--- fi setMinimum i setMaximum ---
 						    nSlider.setValue((int) (defaultDouble*nSlider.getConversionFactor()));
 							nSlider.setMinorTickSpacing((int)(step*nSlider.getConversionFactor())); nSlider.setSnapToTicks(true);
-							nSlider.setName(text);
+							nSlider.setBorder(BorderFactory.createTitledBorder(text));
 						    ncontrolBlock.add(nSlider);
 							break;
 						
@@ -159,10 +178,12 @@ public class Model {
 							//VARIABLES
 							id = Integer.parseInt(elm.getAttribute("id"));
 							defaultInt = Integer.parseInt(elm.getAttribute("default"));
+							text = elm.getAttribute("label");
 							//CREACIO COMPONENT + CONTROL D'ERRORS (VALORS INVALIDS)
 							CDropdown nDropdown = new CDropdown();
 							nDropdown.setId(id);
-								//Opcions
+							nDropdown.setBorder(BorderFactory.createTitledBorder(text));
+								//Insercio opcions
 							NodeList dropdownOpts = (NodeList) elm.getElementsByTagName("option");
 							for (int c = 0; c < dropdownOpts.getLength() ; c++) {
 								Node optionNode = dropdownOpts.item(c);
@@ -172,10 +193,10 @@ public class Model {
 								nDropdownOption.setText(optionElm.getTextContent());
 								nDropdown.addOption(nDropdownOption);
 							}
-								//--- Fi Opcions ---
+								//Control error index invalid
 							if (nDropdown.getModel().getSize() < defaultInt) {
-								System.out.println("\nERROR: Default_index_out_of_bounds"
-												 + "\n-Dropdown default selection set to 0");
+								System.out.println("\nERROR: Default_index_out_of_bounds");
+								view.showErrorPopup("Dropdown("+id+") default option index out of bounds");
 								return 1;
 							} else { nDropdown.setSelectedIndex(defaultInt); }
 							ncontrolBlock.add(nDropdown);
@@ -190,8 +211,8 @@ public class Model {
 							text = elm.getTextContent();
 							//CONTROL D'ERRORS (VALORS INVALIDS)
 							if (thresholdLow.intValue() > thresholdHigh.intValue()) {
-								System.out.println("\nERROR: Threshold_low_cant_be_greater_than_threshold_high"
-										 		 + "\n-Sensor generation ABORTED");
+								System.out.println("\nERROR: Threshold_low_cant_be_greater_than_threshold_high");
+								view.showErrorPopup("Sensor("+id+") minimum threshold can't be greater than maximum");
 								return 1;
 							}
 							//CREACIO COMPONENT
@@ -200,7 +221,8 @@ public class Model {
 							nSensor.setUnit(unit);
 							nSensor.setThresholdLow(thresholdLow.intValue());
 							nSensor.setThresholdHigh(thresholdHigh.intValue());
-							nSensor.setText(text);
+							nSensor.setText("-- "+unit);
+							nSensor.setBorder(BorderFactory.createTitledBorder(text));
 							nSensor.setVisible(true);
 							ncontrolBlock.add(nSensor);
 							break;
@@ -208,6 +230,7 @@ public class Model {
 						default:
 							System.out.println("\nERROR: Unknown_control_type"
 											 + "\nControl type: " + elm.getNodeName());
+							view.showErrorPopup("Unknown control type (" + elm.getNodeName() + ")");
 							return 1;
 					}//switch
 				}//if node es element
@@ -217,14 +240,14 @@ public class Model {
 		}//for per cada bloc de components
 		
 		//TO REMOVE Impressio del model de dades resultant
-		System.out.println("\nDATA MODEL");
+		System.out.println("\nGENERATED DATA MODEL REPRESENTATION");
 		for (int a = 0 ; a < controls.size() ; a++) {
 			System.out.println("\nBloc: " + controls.get(a).getName());
 			for (int b = 0 ; b < controls.get(a).size() ; b++) {
 				System.out.println(controls.get(a).get(b).toString());
 			}
 		}
-		System.out.println("\nDATA MODEL FINISHED PRINTING");
+		System.out.println("DATA MODEL FINISHED PRINTING\n");
 		return 0;
 	}// m carregarConfiguracio
 
