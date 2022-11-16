@@ -37,12 +37,14 @@ public class Model {
             doc = dBuilder.parse(file);
 			doc.getDocumentElement().normalize();
         } catch (ParserConfigurationException e) {
-        	e.printStackTrace(); 
-        } catch (SAXException e) { 
         	e.printStackTrace();
-        	System.out.println("SAXY");
+        	System.out.println("ERROR 1");
+        } catch (SAXException e) {
+        	e.printStackTrace();
+        	System.out.println("ERROR 2");
         } catch (IOException e) { 
         	e.printStackTrace(); 
+        	System.out.println("ERROR 3");
         }
 		
 		//LECTURA DE DADES DE L'XML
