@@ -30,7 +30,7 @@ public class Model {
 	private View view = null;
 	private File file = null;
 	private Document doc;
-	private ArrayList<ControlsBlock> controls; //controls.get(indexDeBloc).get(indexDeComponent)
+	private static ArrayList<ControlsBlock> controls; //controls.get(indexDeBloc).get(indexDeComponent)
 	
 	public Model(View view) {
 		this.view = view;
@@ -255,7 +255,7 @@ public class Model {
 		file = File;
 	}// m setFile
 	
-	public ArrayList<ControlsBlock> getControls() {
+	public static ArrayList<ControlsBlock> getControls() {
 		return controls;
 	}//m getControls
 	

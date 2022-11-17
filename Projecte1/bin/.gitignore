@@ -1,13 +1,2 @@
-/CDropdown.class
-/CDropdownOption.class
-/CSensor.class
-/CSlider.class
-/CSwitch.class
-/ControlsBlock.class
-/DataBase.class
-/Model$1.class
-/Model.class
-/UtilsSQLite.class
-/View$1.class
-/View$2.class
-/View.class
+/Client.class
+/Server.class
