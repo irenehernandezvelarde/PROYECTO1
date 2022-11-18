@@ -54,6 +54,8 @@ public class DataBase {
 
         // Afegir elements a una taula
         UtilsSQLite.queryUpdate(conn, "INSERT INTO users (username,password) VALUES (\"Neei\",\"1234\");");
+        UtilsSQLite.queryUpdate(conn, "INSERT INTO users (username,password) VALUES (\"Jordi\",\"4321\");");
+
 
         // Desconnectar
         UtilsSQLite.disconnect(conn);
