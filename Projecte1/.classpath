@@ -6,9 +6,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="./src/lib/Java-WebSocket-1.5.3.jar"/>
-	<classpathentry kind="lib" path="./src/lib/slf4j-api-2.0.3.jar"/>
-	<classpathentry kind="lib" path="./src/lib/slf4j-simple-2.0.3.jar"/>
-	<classpathentry kind="lib" path="./src/lib/sqlite-jdbc-3.39.3.0.jar"/>
+	<classpathentry kind="lib" path="src/lib/Java-WebSocket-1.5.3.jar"/>
+	<classpathentry kind="lib" path="src/lib/slf4j-api-2.0.3.jar"/>
+	<classpathentry kind="lib" path="src/lib/slf4j-simple-2.0.3.jar"/>
+	<classpathentry kind="lib" path="src/lib/sqlite-jdbc-3.39.3.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Neei/Desktop/Repositorios/PROYECTO1_DESKTOP/Projecte1/src/lib/password4j-1.6.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
