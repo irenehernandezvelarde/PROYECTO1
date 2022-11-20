@@ -1,3 +1,4 @@
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.BorderFactory;
@@ -171,6 +172,7 @@ public class View extends JFrame {
 class titledPane extends JPanel{
 	titledPane(CSwitch component){
 		this.setLayout(new GridLayout(2,1));
+		this.setMaximumSize(new Dimension(1000, 50));
 		
 		JLabel title = new JLabel(component.getTitle());
 		title.setSize(this.getWidth(),title.getHeight());
@@ -180,6 +182,7 @@ class titledPane extends JPanel{
 	}
 	titledPane(CSlider component){
 		this.setLayout(new GridLayout(2,1));
+		this.setMaximumSize(new Dimension(1000, 50));
 		
 		JLabel title = new JLabel(component.getTitle());
 		title.setSize(this.getWidth(),title.getHeight());
@@ -189,6 +192,7 @@ class titledPane extends JPanel{
 	}
 	titledPane(CDropdown component){
 		this.setLayout(new GridLayout(2,1));
+		this.setMaximumSize(new Dimension(1000, 50));
 		
 		JLabel title = new JLabel(component.getTitle());
 		title.setSize(this.getWidth(),title.getHeight());
@@ -198,6 +202,7 @@ class titledPane extends JPanel{
 	}
 	titledPane(CSensor component){
 		this.setLayout(new GridLayout(2,1));
+		this.setMaximumSize(new Dimension(1000, 50));
 		
 		JLabel title = new JLabel(component.getTitle());
 		title.setSize(this.getWidth(),title.getHeight());
