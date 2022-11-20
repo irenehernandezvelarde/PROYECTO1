@@ -4,8 +4,9 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
+import javax.swing.JScrollPane;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -53,6 +54,8 @@ public class View extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(500, 500);
 		this.setLocationRelativeTo(null);
+		this.setTitle("IETI Industry - By: the Work'o'matic team");
+		this.setExtendedState(MAXIMIZED_BOTH);
 		
 		//CONFIG CONTENTPANE
 		contentPane = new JPanel();
@@ -85,69 +88,121 @@ public class View extends JFrame {
 					System.out.println("File selected: " + fileChooser.getSelectedFile().getAbsolutePath());
 					model.setFile(fileChooser.getSelectedFile());
 				}
-				
 				//CARREGUEM DADES DEL FITXER
 				if (model.carregarConfiguracio() == 0) {
-					contentPane.removeAll();
-					
-					//CONFIGUREM LA GUI A PARTIR DE LES DADES
-					contentPane.setLayout(new GridLayout(4,1,5,5));
-				    
-					JPanel panelSwitches = new JPanel();
-					panelSwitches.setLayout(new BoxLayout(panelSwitches,BoxLayout.Y_AXIS));
-					panelSwitches.setBorder(BorderFactory.createTitledBorder("SWITCHES"));
-			        contentPane.add(panelSwitches);
-					
-					JPanel panelSliders = new JPanel();
-					panelSliders.setLayout(new BoxLayout(panelSliders,BoxLayout.Y_AXIS));
-					panelSliders.setBorder(BorderFactory.createTitledBorder("SLIDERS"));
-					contentPane.add(panelSliders);
-					
-					JPanel panelComboBoxs = new JPanel();
-					panelComboBoxs.setLayout(new BoxLayout(panelComboBoxs,BoxLayout.Y_AXIS));
-					panelComboBoxs.setBorder(BorderFactory.createTitledBorder("DROPDOWNS"));
-			        contentPane.add(panelComboBoxs);
-			        
-					JPanel panelLabels = new JPanel();
-					panelLabels.setLayout(new BoxLayout(panelLabels,BoxLayout.Y_AXIS));
-					panelLabels.setBorder(BorderFactory.createTitledBorder("SENSORS"));
-			        contentPane.add(panelLabels);
-			        //end GUI
-					
-					ArrayList<ControlsBlock> controls = model.getControls();
-					
-					for(ArrayList a: controls) {
-						for (int b = 0; b<a.size(); b++) {
-							System.out.println(a.get(b).getClass());
-							switch(String.valueOf(a.get(b).getClass())) {
-							case "class CSwitch":
-								JToggleButton toggleButton = (JToggleButton) a.get(b);
-								panelSwitches.add(toggleButton);
-								break;
-							case "class CSlider":
-								CSlider n = (CSlider) a.get(b);
-								panelSliders.add(n);
-								break;
-							case "class CDropdown":
-								CDropdown combo =  (CDropdown) a.get(b);
-								panelComboBoxs.add(combo);
-						        break;
-							case "class CSensor":
-								CSensor label = (CSensor) a.get(b);
-								panelLabels.add(label);
-						        break;
-							}
-						}
-					}
-					contentPane.revalidate();
+					//PINTEM GUI
+					loadGuiFromFile();
 				}
 			}});
 		menuArxiu.add(itemCarregaConf);		
 	}// c View
+	
+	//CARREGAR GUI DE FITXER
+	public void loadGuiFromFile() {
+		contentPane.removeAll();
+		
+		//CONFIGUREM LA GUI A PARTIR DE LES DADES
+		contentPane.setLayout(new GridLayout(2,2,5,5));
+		
+		JScrollPane scroll;
+	    
+		JPanel panelSwitches = new JPanel();
+		panelSwitches.setLayout(new BoxLayout(panelSwitches,BoxLayout.Y_AXIS));
+		panelSwitches.setBorder(BorderFactory.createTitledBorder("SWITCHES"));
+		scroll = new JScrollPane(panelSwitches);
+        contentPane.add(scroll);
+		
+		JPanel panelSliders = new JPanel();
+		panelSliders.setLayout(new BoxLayout(panelSliders,BoxLayout.Y_AXIS));
+		panelSliders.setBorder(BorderFactory.createTitledBorder("SLIDERS"));
+		scroll = new JScrollPane(panelSliders);
+		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        contentPane.add(scroll);
+		
+		JPanel panelDropdowns = new JPanel();
+		panelDropdowns.setLayout(new BoxLayout(panelDropdowns,BoxLayout.Y_AXIS));
+		panelDropdowns.setBorder(BorderFactory.createTitledBorder("DROPDOWNS"));
+		scroll = new JScrollPane(panelDropdowns);
+        contentPane.add(scroll);
+        
+		JPanel panelSensors = new JPanel();
+		panelSensors.setLayout(new BoxLayout(panelSensors,BoxLayout.Y_AXIS));
+		panelSensors.setBorder(BorderFactory.createTitledBorder("SENSORS"));
+		scroll = new JScrollPane(panelSensors);
+        contentPane.add(scroll);
+        //end GUI
+		
+		ArrayList<ControlsBlock> controls = model.getControls();
+		
+		for(ArrayList a: controls) {
+			for (int b = 0; b<a.size(); b++) {
+				System.out.println(a.get(b).getClass());
+				switch(String.valueOf(a.get(b).getClass())) {
+				case "class CSwitch":
+					CSwitch toggle = (CSwitch) a.get(b);
+					panelSwitches.add(new titledPane(toggle));
+					break;
+				case "class CSlider":
+					CSlider slider = (CSlider) a.get(b);
+					slider.setSize(slider.getSize());
+					panelSliders.add(new titledPane(slider));
+					break;
+				case "class CDropdown":
+					CDropdown dropdown =  (CDropdown) a.get(b);
+					panelDropdowns.add(new titledPane(dropdown));
+			        break;
+				case "class CSensor":
+					CSensor sensor = (CSensor) a.get(b);
+					panelSensors.add(new titledPane(sensor));
+			        break;
+				}
+			}
+		}
+		contentPane.revalidate();
+	}// m loadGuiFromFile
 	
 	//POPUP ERRORS
 	public void showErrorPopup(String errorMessage) {
 		JOptionPane.showMessageDialog(this, errorMessage);
 	}//m showErrorPopup
 	
+}
+
+class titledPane extends JPanel{
+	titledPane(CSwitch component){
+		this.setLayout(new GridLayout(2,1));
+		
+		JLabel title = new JLabel(component.getTitle());
+		title.setSize(this.getWidth(),title.getHeight());
+		this.add(title);
+		
+		this.add(component);
+	}
+	titledPane(CSlider component){
+		this.setLayout(new GridLayout(2,1));
+		
+		JLabel title = new JLabel(component.getTitle());
+		title.setSize(this.getWidth(),title.getHeight());
+		this.add(title);
+		
+		this.add(component);
+	}
+	titledPane(CDropdown component){
+		this.setLayout(new GridLayout(2,1));
+		
+		JLabel title = new JLabel(component.getTitle());
+		title.setSize(this.getWidth(),title.getHeight());
+		this.add(title);
+		
+		this.add(component);
+	}
+	titledPane(CSensor component){
+		this.setLayout(new GridLayout(2,1));
+		
+		JLabel title = new JLabel(component.getTitle());
+		title.setSize(this.getWidth(),title.getHeight());
+		this.add(title);
+		
+		this.add(component);
+	}
 }

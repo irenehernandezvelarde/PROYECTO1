@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 
-import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -108,6 +107,7 @@ public class Model {
 							//CREACIÓ COMPONENT
 							CSwitch nSwitch = new CSwitch();
 							nSwitch.setId(id);
+							nSwitch.setTitle(text);
 							if (defaultString.contentEquals("on")) {
 								nSwitch.setSelected(true);
 								nSwitch.setText(defaultString.toUpperCase());
@@ -122,7 +122,7 @@ public class Model {
 									} else {nSwitch.setText("OFF");}
 								}
 							});
-							nSwitch.setBorder(BorderFactory.createTitledBorder(text));
+							//nSwitch.setBorder(BorderFactory.createTitledBorder(text));
 							ncontrolBlock.add(nSwitch);
 							break;
 						
@@ -159,6 +159,7 @@ public class Model {
 							//CREACIO COMPONENT
 							CSlider nSlider = new CSlider();
 							nSlider.setId(id);
+							nSlider.setTitle(text);
 							nSlider.setConversionFactor(step); //Necessari per a mostrar decimals
 								//setMinimum i setMaximum (i tots els valors entre mitj)
 							Hashtable<Integer,JLabel> labelTable = new Hashtable<Integer,JLabel>();
@@ -170,8 +171,7 @@ public class Model {
 								//--- fi setMinimum i setMaximum ---
 						    nSlider.setValue((int) (defaultDouble*nSlider.getConversionFactor()));
 							nSlider.setMinorTickSpacing((int)(step*nSlider.getConversionFactor())); nSlider.setSnapToTicks(true);
-							nSlider.setBorder(BorderFactory.createTitledBorder(text));
-						    ncontrolBlock.add(nSlider);
+							ncontrolBlock.add(nSlider);
 							break;
 						
 						case "dropdown":
@@ -182,7 +182,7 @@ public class Model {
 							//CREACIO COMPONENT + CONTROL D'ERRORS (VALORS INVALIDS)
 							CDropdown nDropdown = new CDropdown();
 							nDropdown.setId(id);
-							nDropdown.setBorder(BorderFactory.createTitledBorder(text));
+							nDropdown.setTitle(text);
 								//Insercio opcions
 							NodeList dropdownOpts = (NodeList) elm.getElementsByTagName("option");
 							for (int c = 0; c < dropdownOpts.getLength() ; c++) {
@@ -218,12 +218,11 @@ public class Model {
 							//CREACIO COMPONENT
 							CSensor nSensor = new CSensor();
 							nSensor.setId(id);
+							nSensor.setTitle(text);
 							nSensor.setUnit(unit);
 							nSensor.setThresholdLow(thresholdLow.intValue());
 							nSensor.setThresholdHigh(thresholdHigh.intValue());
 							nSensor.setText("-- "+unit);
-							nSensor.setBorder(BorderFactory.createTitledBorder(text));
-							nSensor.setVisible(true);
 							ncontrolBlock.add(nSensor);
 							break;
 						
@@ -280,6 +279,10 @@ class CSwitch extends JToggleButton{
 	public void setId(int id) {this.id = id;}
 	public int getId() {return id;}
 	
+	private String title;
+	public void setTitle(String title) {this.title = title;}
+	public String getTitle() {return title;}
+	
 	public String toString() {return "Id: " + id + " | Default: " + this.isSelected() + " | Text: " + this.getText();}
 }
 
@@ -289,6 +292,10 @@ class CSlider extends JSlider{
 	private int id;
 	public void setId(int id) {this.id = id;}
 	public int getId() {return id;}
+	
+	private String title;
+	public void setTitle(String title) {this.title = title;}
+	public String getTitle() {return title;}
 	
 	private int conversionFactor = 1;
 	public void setConversionFactor(Double minorTickSpacing) {
@@ -307,6 +314,10 @@ class CDropdown extends JComboBox{
 	private int id;
 	public void setId(int id) {this.id = id;}
 	public int getId() {return id;}
+	
+	private String title;
+	public void setTitle(String title) {this.title = title;}
+	public String getTitle() {return title;}
 	
 	private CDropdownOption[] dropdownOptions = {};
 	public void addOption(CDropdownOption option) {
@@ -368,6 +379,10 @@ class CSensor extends JLabel{
 	private int id;
 	public void setId(int id) {this.id = id;}
 	public int getId() {return id;}
+	
+	private String title;
+	public void setTitle(String title) {this.title = title;}
+	public String getTitle() {return title;}
 	
 	private String unit;
 	public void setUnit(String unit) {this.unit = unit;}
