@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.java_websocket.WebSocket;
@@ -18,20 +19,9 @@ import org.java_websocket.server.WebSocketServer;
 
 
 public class Server extends WebSocketServer {
-
     static Server socket;
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-    
-
-    public static void connecta() throws InterruptedException, IOException {
-        int port = 8888;
-        boolean running = true;
-
-        java.lang.System.setProperty("jdk.tls.client.protocols", "TLSv1,TLSv1.1,TLSv1.2");
-        socket = new Server(port);
-        socket.start();
-        System.out.println("Servidor funciona al port: " + socket.getPort());
-    }
+    private ArrayList<ControlsBlock> controls = Model.getControls();
 
     public Server(int port) throws UnknownHostException {
         super(new InetSocketAddress(port));
@@ -41,27 +31,54 @@ public class Server extends WebSocketServer {
         super(address);
     }
 
-    @Override
-    public void onOpen(WebSocket conn, ClientHandshake handshake) {
+    public static void connecta() throws InterruptedException, IOException {
+        int port = 8888;
+        java.lang.System.setProperty("jdk.tls.client.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+        socket = new Server(port);
+        socket.start();
+        System.out.println("Servidor funciona al port: " + socket.getPort());
+    }
+    
+    @Override public void onStart() {
+    	
+        System.out.println("Escriu 'exit' per aturar el servidor");
+        setConnectionLostTimeout(0);
+        setConnectionLostTimeout(100);
+    }
+
+    @Override public void onOpen(WebSocket conn, ClientHandshake handshake) {
 
         conn.send("Bienvenido a IETI Industry");
 
         broadcast("Nueva conexión: " + handshake.getResourceDescriptor());
 
         String host = conn.getRemoteSocketAddress().getAddress().getHostAddress();
-        System.out.println(host + " se a conectdo");
+        System.out.println(host + " se a conectado");
+
+        String modelToString = "model/";
+        ArrayList<ControlsBlock> controls = Model.getControls();
+        for (int a = 0; a < controls.size(); a++){//For each block
+            ControlsBlock block = controls.get(a);
+            modelToString += "#";
+            modelToString += block.toString();
+            for (int b = 0; b < block.size(); b++){//For each component
+                modelToString += "*";
+                modelToString += block.get(b).toString();
+            }
+        }
+        System.out.println(modelToString);
+        
+        conn.send(modelToString);
     }
 
-    @Override
-    public void onClose(WebSocket conn, int code, String reason, boolean remote) {
+    @Override public void onClose(WebSocket conn, int code, String reason, boolean remote) {
 
         broadcast(conn + " se a desconectado");
 
         System.out.println(conn + " se a desconectado");
     }
 
-    @Override
-    public void onMessage(WebSocket conn, String message) {
+    @Override public void onMessage(WebSocket conn, String message) {
 
         if (message.equalsIgnoreCase("getUsers")) {
         	
@@ -76,24 +93,14 @@ public class Server extends WebSocketServer {
         }
     }
 
-    @Override
-    public void onMessage(WebSocket conn, ByteBuffer message) {
+    @Override public void onMessage(WebSocket conn, ByteBuffer message) {
 
         // Mostrem per pantalla (servidor) el missatge
         System.out.println(conn + ": " + message);
     }
 
-    @Override
-    public void onError(WebSocket conn, Exception ex) {
+    @Override public void onError(WebSocket conn, Exception ex) {
         ex.printStackTrace();
-    }
-
-    @Override
-    public void onStart() {
-    	
-        System.out.println("Escriu 'exit' per aturar el servidor");
-        setConnectionLostTimeout(0);
-        setConnectionLostTimeout(100);
     }
 
     public String getConnectionId(WebSocket connection) {

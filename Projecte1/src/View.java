@@ -27,25 +27,23 @@ public class View extends JFrame {
 	
 	//METODE MAIN
 	public static void main(String[] args) {
+		
 		try {
 			Server.connecta();
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (InterruptedException e1) {e1.printStackTrace();
+		} catch (IOException e1) {e1.printStackTrace();
 		}
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					View frame = new View();
 					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+					
+				} catch (Exception e) {e.printStackTrace();}
 			}
 		});
+
 	}// m main 
 	
 	//CONSTRUCTOR (PART IMPORTANT)
