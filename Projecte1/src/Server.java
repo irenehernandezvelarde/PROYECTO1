@@ -30,7 +30,7 @@ public class Server extends WebSocketServer {
         java.lang.System.setProperty("jdk.tls.client.protocols", "TLSv1,TLSv1.1,TLSv1.2");
         socket = new Server(port);
         socket.start();
-        System.out.println("Servidor funciona al port: " + socket.getPort());
+        System.out.println("El servidor funciona en el puerto: " + socket.getPort());
     }
 
     public Server(int port) throws UnknownHostException {
@@ -91,7 +91,7 @@ public class Server extends WebSocketServer {
     @Override
     public void onStart() {
     	
-        System.out.println("Escriu 'exit' per aturar el servidor");
+        System.out.println("Escribe 'exit' para parar el servidor");
         setConnectionLostTimeout(0);
         setConnectionLostTimeout(100);
     }
