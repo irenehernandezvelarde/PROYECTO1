@@ -146,10 +146,11 @@ public class DataBase {
 		}
         
         System.out.println(passwordPepper);
-        boolean check;
+        boolean check = false;
         
         if (passwordSalt != null && passwordSalt != null && passwordPepper != null) {
 	        check = Password.check(password, passwordHash).addSalt(passwordSalt).addPepper(passwordPepper).withArgon2();
+            check = true;
 		} else {
 			check = false;
 		}
