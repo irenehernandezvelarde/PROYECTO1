@@ -31,6 +31,7 @@ public class Model {
 	private Document doc;
 	private static ArrayList<ControlsBlock> controls; //controls.get(indexDeBloc).get(indexDeComponent)
 	
+	//Constructor (linkat a view)
 	public Model(View view) {
 		this.view = view;
 	}
@@ -59,14 +60,13 @@ public class Model {
         }
 		
 		//LECTURA DE DADES DE L'XML
-		
 		//Inicialitzacio del model de dades (conte els blocs de components)
 		controls = new ArrayList<ControlsBlock>();
 		
 		//Creacio de bloc de components (conte els components)
 		NodeList controlBlocksNodes = doc.getElementsByTagName("controls"); //Llista dels blocs de controls
 		for(int a = 0; a < controlBlocksNodes.getLength(); a ++) {
-			Element elm = (Element) controlBlocksNodes.item(a);
+			Element elm = (Element) controlBlocksNodes.item(a);//Un bloc de controls
 			
 			//Creacio bloc de controls
 			ControlsBlock ncontrolBlock = new ControlsBlock();
@@ -75,7 +75,7 @@ public class Model {
 			//Creacio de components i insercio al bloc
 			NodeList controlsNodes = (NodeList)controlBlocksNodes.item(a); //Llista dels controls del bloc (switch/slider/dropdown/sensor/...)
 			for (int b = 0; b < controlsNodes.getLength(); b++) {
-				Node node = controlsNodes.item(b); //Control específic del bloc
+				Node node = controlsNodes.item(b); //Un control específic del bloc
 				if(node.getNodeType() == Node.ELEMENT_NODE) {
 					elm = (Element) node; 
 					
@@ -122,7 +122,6 @@ public class Model {
 									} else {nSwitch.setText("OFF");}
 								}
 							});
-							//nSwitch.setBorder(BorderFactory.createTitledBorder(text));
 							ncontrolBlock.add(nSwitch);
 							break;
 						
@@ -260,16 +259,16 @@ public class Model {
 	
 }
 
-
-
-
-
 //BLOC DE CONTROLS
 
 class ControlsBlock extends ArrayList<Object> {
 	private String name;
 	public void setName(String name) {this.name = name;}
 	public String getName() {return name;}
+
+	public String toString(){
+		return "block="+"name:"+name;
+	}
 }
 
 //CLASES 'CUSTOM CONTROL' (cClasecontrol) Components grafics personalitzats
@@ -283,12 +282,13 @@ class CSwitch extends JToggleButton{
 	public void setTitle(String title) {this.title = title;}
 	public String getTitle() {return title;}
 	
-	public String toString() {return "Id: " + id + " | Default: " + this.isSelected() + " | Text: " + this.getText();}
+	public String toString() {return "switch:"+"id="+id+",text="+getText()+",default="+isSelected();}
+	//switch:id=0,text=ello,default=true
 }
 
-//CSlider pot representar nombres decimals, pero s'ha de definir el ConversionFactor (metode setConversionFactor) a partir del minorTickSpacing
-//i utilitzar (sobre el valor, abans d'utilitzarlo al metode (ex .setValue(intValue*CSlider.getConversionFactor) )
-class CSlider extends JSlider{ 
+class CSlider extends JSlider{
+	//CSlider pot representar nombres decimals, pero s'ha de definir el ConversionFactor (metode setConversionFactor) a partir del minorTickSpacing
+	//i utilitzar (sobre el valor, abans d'utilitzarlo al metode (ex .setValue(intValue*CSlider.getConversionFactor) ) 
 	private int id;
 	public void setId(int id) {this.id = id;}
 	public int getId() {return id;}
@@ -307,7 +307,7 @@ class CSlider extends JSlider{
 	}
 	public int getConversionFactor() {return conversionFactor;}
 	
-	public String toString() {return "Id: " + id + " | Default: " + this.getValue() + " | Min: " + this.getMinimum() + " | Max: " + this.getMaximum() + " | Step: " + this.getMinorTickSpacing() + " | (SENSE APLICAR CONVERSIONFACTOR: /" + this.conversionFactor + ")";}
+	public String toString() {return "slider="+"id:"+id+",text:"+title+",min:"+getMinimum()+",max:"+getMaximum()+",step:"+getMinorTickSpacing()+",conversionFactor:"+conversionFactor;}
 }
 
 class CDropdown extends JComboBox{
@@ -359,9 +359,11 @@ class CDropdown extends JComboBox{
 	public String toString() {
 		String OptionsToString = "";
 		for (int a = 0 ; a < dropdownOptions.length ; a++) {
-			OptionsToString += "\n - Option index: " + a + " | " + dropdownOptions[a].toString();
+			OptionsToString += "index_" + a +"-"+ dropdownOptions[a].toString() + "I";
 		}
-		return "Id: " + id + " | Default: " + this.getSelectedIndex() + " | " + OptionsToString;}
+		//return "Id: " + id + " | Default: " + this.getSelectedIndex() + " | " + OptionsToString;}
+		return "dropdown="+"id:"+id+",text:"+title+",options:"+OptionsToString+",default:"+getSelectedIndex(); 
+	}
 }
 class CDropdownOption {
 	private int optionId;
@@ -372,7 +374,7 @@ class CDropdownOption {
 	public void setText(String text){this.text = text;}
 	public String getText(){return text;}
 	
-	public String toString() {return "Id: " + optionId + " | Text: " + text;}
+	public String toString() {return "id_"+ optionId+"-value_"+text;}
 }
 
 class CSensor extends JLabel{
@@ -397,6 +399,7 @@ class CSensor extends JLabel{
 	public int getThresholdHigh() {return thresholdHigh;}
 	
 	public String toString() {
-		return "Id: " + id + " | Unit: " + unit + " | Treshold Low: " + thresholdLow + " | Treshold High: " + thresholdHigh + " | Text: " + this.getText();
+		//return "Id: " + id + " | Unit: " + unit + " | Treshold Low: " + thresholdLow + " | Treshold High: " + thresholdHigh + " | Text: " + this.getText();
+		return "sensor=" + "id:"+id+",text:"+title+",unit:"+unit+",low:"+thresholdLow+",high:"+thresholdHigh;
 	}
 }
