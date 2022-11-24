@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,10 +17,35 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 
+
+// Compilar amb:
+// javac -cp "lib/*:." WsServidor.java
+// java -cp "lib/*:." WsServidor
+
+// Tutorials: http://tootallnate.github.io/Java-WebSocket/
+
 public class Server extends WebSocketServer {
     static Server socket;
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+<<<<<<< HEAD
     private ArrayList<ControlsBlock> controls = Model.getControls();
+=======
+    
+
+    public static void connecta() throws InterruptedException, IOException {
+        int port = 8888;
+        boolean running = true;
+
+        // Deshabilitar SSLv3 per clients Android
+        java.lang.System.setProperty("jdk.tls.client.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+
+        socket = new Server(port);
+        socket.start();
+        System.out.println("WsServidor funciona al port: " + socket.getPort());
+
+        
+    }
+>>>>>>> 1ebaea8edcb922788afbb5655c94ae3959cbc080
 
     public Server(int port) throws UnknownHostException {
         super(new InetSocketAddress(port));
@@ -48,11 +72,15 @@ public class Server extends WebSocketServer {
 
     @Override public void onOpen(WebSocket conn, ClientHandshake handshake) {
 
-        conn.send("Bienvenido a IETI Industry");
+        // Saludem personalment al nou client
+        //conn.send("Benvingut a WsServer");
 
-        broadcast("Nueva conexión: " + handshake.getResourceDescriptor());
+        // Enviem la direcció URI del nou client a tothom
+        //broadcast("Nova connexió: " + handshake.getResourceDescriptor());
 
+        // Mostrem per pantalla (servidor) la nova connexió
         String host = conn.getRemoteSocketAddress().getAddress().getHostAddress();
+<<<<<<< HEAD
         System.out.println(host + " se a conectado");
 
         String modelToString = "model/";
@@ -69,23 +97,28 @@ public class Server extends WebSocketServer {
         System.out.println(modelToString);
         
         conn.send(modelToString);
+=======
+        System.out.println(host + " s'ha connectat");
+>>>>>>> 1ebaea8edcb922788afbb5655c94ae3959cbc080
     }
 
     @Override public void onClose(WebSocket conn, int code, String reason, boolean remote) {
 
-        broadcast(conn + " se a desconectado");
+        // Informem a tothom que el client s'ha desconnectat
+        //broadcast(conn + " s'ha desconnectat");
 
-        System.out.println(conn + " se a desconectado");
+        // Mostrem per pantalla (servidor) la desconnexió
+        System.out.println(conn + " s'ha desconnectat");
     }
 
     @Override public void onMessage(WebSocket conn, String message) {
 
         if (message.equalsIgnoreCase("getUsers")) {
-        	
+            // Enviar la llsita de connexions al client
             HashMap<String, String> users = DataBase.getData();
             System.out.println(users.size());
             conn.send(objToBytes(users));
-            System.out.println("Enviant usuaris" + users);
+            System.out.println("Enviant usuaris");
 
 
         } else if (message.equalsIgnoreCase("getModel")) {
@@ -97,12 +130,37 @@ public class Server extends WebSocketServer {
 
         // Mostrem per pantalla (servidor) el missatge
         System.out.println(conn + ": " + message);
+        
+        String[] datos = (String[]) bytesToObject(message);
+        if (datos.length == 2) { // Datos login
+			String username = datos[0];
+			String password = datos[1];
+			conn.send(DataBase.checkLogin(username, password));
+		} else if (datos.length == 4) {
+			System.out.println("Datos recibidos");
+            System.out.println(datos[0]);
+            System.out.println(datos[1]);
+            System.out.println(datos[2]);
+            System.out.println(datos[3]);
+			//interfazIndustry_2.updateInterfaz(datos);
+		}
     }
 
     @Override public void onError(WebSocket conn, Exception ex) {
         ex.printStackTrace();
     }
 
+<<<<<<< HEAD
+=======
+    @Override
+    public void onStart() {
+        // S'inicia el servidor
+        System.out.println("Escriu 'exit' per aturar el servidor");
+        setConnectionLostTimeout(0);
+        setConnectionLostTimeout(100);
+    }
+
+>>>>>>> 1ebaea8edcb922788afbb5655c94ae3959cbc080
     public String getConnectionId(WebSocket connection) {
         String name = connection.toString();
         return name.replaceAll("org.java_websocket.WebSocketImpl@", "").substring(0, 3);
@@ -124,9 +182,11 @@ public class Server extends WebSocketServer {
     public static Object bytesToObject (ByteBuffer arr) {
         Object result = null;
         try {
+            // Transforma el ByteButter en byte[]
             byte[] bytesArray = new byte[arr.remaining()];
             arr.get(bytesArray, 0, bytesArray.length);
   
+            // Transforma l'array de bytes en objecte
             ByteArrayInputStream in = new ByteArrayInputStream(bytesArray);
             ObjectInputStream is = new ObjectInputStream(in);
             return is.readObject();
@@ -136,5 +196,5 @@ public class Server extends WebSocketServer {
         } catch (IOException e) { e.printStackTrace(); }
         return result;
     }
-  
+     
 }

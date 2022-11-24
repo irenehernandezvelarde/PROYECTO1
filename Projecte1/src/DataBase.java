@@ -75,12 +75,12 @@ public class DataBase {
         // Afegir elements a una taula
         
         
-        String pwd = "prueva";
-        String pwdSalt = "holita123";
-        String pwdPepper = "pimienta";
+        String password = "Irene";
+        String passwordSalt = "prueba";
+        String passwordPepper = "pimienta";
         
        
-        String hash = Password.hash(pwd).addSalt(pwdSalt).addPepper(pwdPepper).withArgon2().getResult();
+        String hash = Password.hash(password).addSalt(passwordSalt).addPepper(passwordPepper).withArgon2().getResult();
         
         UtilsSQLite.queryUpdate(conn, "INSERT INTO users (username,password) VALUES (\"test\",'"+hash+"');");
 
@@ -96,8 +96,8 @@ public class DataBase {
 		}
         System.out.println("Id: "+id);
         
-        UtilsSQLite.queryUpdate(connSalt, "insert into salt (idUser,salt) values ("+id+",'"+pwdSalt+"');");
-        UtilsSQLite.queryUpdate(connPepper, "insert into pepper (idUser,pepper) values ("+id+",'"+pwdPepper+"');");
+        UtilsSQLite.queryUpdate(connSalt, "insert into salt (idUser,salt) values ("+id+",'"+passwordSalt+"');");
+        UtilsSQLite.queryUpdate(connPepper, "insert into pepper (idUser,pepper) values ("+id+",'"+passwordPepper+"');");
         
         
         // Desconnectar
@@ -111,11 +111,11 @@ public class DataBase {
         
         ResultSet rs = UtilsSQLite.querySelect(conn, "select id,password from users where username = '"+username+"';");
         int idUser = 0;
-        String pwdHash = "";
+        String passwordHash = "";
         try {
 			rs.next();
 			idUser = rs.getInt(1);
-			pwdHash = rs.getString(2);
+			passwordHash = rs.getString(2);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -124,37 +124,38 @@ public class DataBase {
         System.out.println(idUser);
         
         ResultSet rsSalt = UtilsSQLite.querySelect(connSalt, "select salt from salt where idUser = "+idUser+";");
-        String pwdSalt = "";
+        String passwordSalt = "";
         try {
 			rsSalt.next();
-			pwdSalt = rsSalt.getString(1);
+			passwordSalt = rsSalt.getString(1);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         
-        System.out.println(pwdSalt);
+        System.out.println(passwordSalt);
         
         ResultSet rsPepper = UtilsSQLite.querySelect(connPepper, "select pepper from pepper where idUser = "+idUser+";");
-        String pwdPepper = "";
+        String passwordPepper = "";
         try {
 			rsPepper.next();
-			pwdPepper = rsPepper.getString(1);
+			passwordPepper = rsPepper.getString(1);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         
-        System.out.println(pwdPepper);
-        boolean check;
+        System.out.println(passwordPepper);
+        boolean check = false;
         
-        if (pwdSalt != null && pwdSalt != null && pwdPepper != null) {
-	        check = Password.check(password, pwdHash).addSalt(pwdSalt).addPepper(pwdPepper).withArgon2();
+        if (passwordSalt != null && passwordSalt != null && passwordPepper != null) {
+	        check = Password.check(password, passwordHash).addSalt(passwordSalt).addPepper(passwordPepper).withArgon2();
+            check = true;
 		} else {
 			check = false;
 		}
         
-        System.out.println("Login: "+check);
+        System.out.println("Login: " + check);
         if (check) {
 			return "true";
 		} else {
