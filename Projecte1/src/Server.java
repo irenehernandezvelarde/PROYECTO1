@@ -58,14 +58,16 @@ public class Server extends WebSocketServer {
         String modelToString = "model/";
         //Formacio del missatge (representacio string del model preparada per a fer .split())
         ArrayList<ControlsBlock> controls = Model.getControls();
+        if (controls == null){conn.send("SERVER ERROR/No_model_loaded");return;}
         for (int a = 0; a < controls.size(); a++){//For each block
             ControlsBlock block = controls.get(a);
-            modelToString += "#";
             modelToString += block.toString();
+            modelToString += ";";
             for (int b = 0; b < block.size(); b++){//For each component
-                modelToString += "*";
                 modelToString += block.get(b).toString();
+                modelToString += "!";
             }
+            modelToString += "#";
         }
         System.out.println(modelToString);
         //Enviament model
