@@ -157,9 +157,9 @@ public class DataBase {
 		}
         
         if (check) {
-			return "true";
+			return "passwordCheck/true";
 		} else {
-			return "false";
+			return "passwordCheck/false";
 		}
     }
 }
