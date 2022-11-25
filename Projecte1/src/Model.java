@@ -282,7 +282,7 @@ class CSwitch extends JToggleButton{
 	public void setTitle(String title) {this.title = title;}
 	public String getTitle() {return title;}
 	
-	public String toString() {return "switch="+"id:"+id+",text:"+getTitle()+",value:"+isSelected();}
+	public String toString() {return "switch="+"id:"+id+",title:"+getTitle()+",value:"+isSelected();}
 	//switch:id=0,text=ello,default=true
 }
 
@@ -307,7 +307,7 @@ class CSlider extends JSlider{
 	}
 	public int getConversionFactor() {return conversionFactor;}
 	
-	public String toString() {return "slider="+"id:"+id+",text:"+title+",min:"+getMinimum()+",max:"+getMaximum()+",step:"+getMinorTickSpacing()+",conversionFactor:"+conversionFactor+",value:"+getValue();}
+	public String toString() {return "slider="+"id:"+id+",title:"+title+",min:"+getMinimum()+",max:"+getMaximum()+",step:"+getMinorTickSpacing()+",conversionFactor:"+conversionFactor+",value:"+getValue();}
 }
 
 class CDropdown extends JComboBox{
@@ -361,7 +361,7 @@ class CDropdown extends JComboBox{
 		for (int a = 0 ; a < dropdownOptions.length ; a++) {
 			OptionsToString += "index_" + a +"-"+ dropdownOptions[a].toString() + "I";
 		}
-		return "dropdown="+"id:"+id+",text:"+title+",options:"+OptionsToString+",value:"+getSelectedIndex(); 
+		return "dropdown="+"id:"+id+",title:"+title+",options:"+OptionsToString+",value:"+getSelectedIndex(); 
 	}
 }
 class CDropdownOption {
@@ -402,6 +402,6 @@ class CSensor extends JLabel{
 	public int getValue() {return value;}
 	
 	public String toString() {
-		return "sensor=" + "id:"+id+",text:"+title+",unit:"+unit+",low:"+thresholdLow+",high:"+thresholdHigh+",value:"+value;
+		return "sensor=" + "id:"+id+",title:"+title+",unit:"+unit+",low:"+thresholdLow+",high:"+thresholdHigh+",value:"+value;
 	}
 }
