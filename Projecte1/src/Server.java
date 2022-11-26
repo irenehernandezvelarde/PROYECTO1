@@ -17,13 +17,6 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 
-
-// Compilar amb:
-// javac -cp "lib/*:." WsServidor.java
-// java -cp "lib/*:." WsServidor
-
-// Tutorials: http://tootallnate.github.io/Java-WebSocket/
-
 public class Server extends WebSocketServer {
 
     static Server socket;
