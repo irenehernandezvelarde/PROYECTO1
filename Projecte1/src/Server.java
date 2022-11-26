@@ -41,8 +41,6 @@ public class Server extends WebSocketServer {
         socket = new Server(port);
         socket.start();
         System.out.println("WsServidor funciona al port: " + socket.getPort());
-
-        
     }
 
     public Server(int port) throws UnknownHostException {
@@ -84,7 +82,7 @@ public class Server extends WebSocketServer {
     }
 
 
-    //USAR ESTE CON OTRA CONDICION AL RECIBIR STRING QUE EMPIECE POR "CAMBIO" O CHANGE, SLICE, PLIT Y SACAR LOS VALORES DE ID ELEMENTO Y VALUE
+    //USAR ESTE CON OTRA CONDICION AL RECIBIR STRING QUE EMPIECE POR "CAMBIO" O CHANGE, SLICE, SPLIT Y SACAR LOS VALORES DE ID ELEMENTO Y VALUE
     @Override
     public void onMessage(WebSocket conn, String message) {
 

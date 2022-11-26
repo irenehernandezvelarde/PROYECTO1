@@ -283,7 +283,6 @@ class CSwitch extends JToggleButton{
 	public String getTitle() {return title;}
 	
 	public String toString() {return "switch="+"id:"+id+",title:"+getTitle()+",value:"+isSelected();}
-	//switch:id=0,text=ello,default=true
 }
 
 class CSlider extends JSlider{
