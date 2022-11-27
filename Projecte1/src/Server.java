@@ -44,40 +44,16 @@ public class Server extends WebSocketServer {
         super(address);
     }
 
-    @Override
-    public void onOpen(WebSocket conn, ClientHandshake handshake) {
-
+    @Override public void onOpen(WebSocket conn, ClientHandshake handshake) {
         String host = conn.getRemoteSocketAddress().getAddress().getHostAddress();
         System.out.println(host + " s'ha connectat");
-        String modelToString = "model/";
-        //Formacio del missatge (representacio string del model preparada per a fer .split())
-        ArrayList<ControlsBlock> controls = Model.getControls();
-        if (controls == null){conn.send("SERVER ERROR/No_model_loaded");return;}
-        for (int a = 0; a < controls.size(); a++){//For each block
-            ControlsBlock block = controls.get(a);
-            modelToString += block.toString();
-            modelToString += ";";
-            for (int b = 0; b < block.size(); b++){//For each component
-                modelToString += block.get(b).toString();
-                modelToString += "!";
-            }
-            modelToString += "#";
-        }
-        System.out.println(modelToString);
-        //Enviament model
-        conn.send(modelToString);
     }
 
-    @Override
-    public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-
+    @Override public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         System.out.println(conn + " s'ha desconnectat");
     }
 
-
-    //USAR ESTE CON OTRA CONDICION AL RECIBIR STRING QUE EMPIECE POR "CAMBIO" O CHANGE, SLICE, SPLIT Y SACAR LOS VALORES DE ID ELEMENTO Y VALUE
-    @Override
-    public void onMessage(WebSocket conn, String message) {
+    @Override public void onMessage(WebSocket conn, String message) {
 
         if (message.equalsIgnoreCase("getUsers")) {
             // Enviar la llsita de connexions al client
@@ -87,8 +63,26 @@ public class Server extends WebSocketServer {
             System.out.println("Enviant usuaris");
 
         } else if (message.equalsIgnoreCase("getModel")) {
-            conn.send(objToBytes(Model.getControls()));
+            System.out.println("Model requested");
+            String modelToString = "model/";
+            //Formacio del missatge (representacio string del model preparada per a fer .split())
+            ArrayList<ControlsBlock> controls = Model.getControls();
+            if (controls == null){conn.send("SERVER ERROR/No_model_loaded");return;}
+            for (int a = 0; a < controls.size(); a++){//For each block
+                ControlsBlock block = controls.get(a);
+                modelToString += block.toString();
+                modelToString += ";";
+                for (int b = 0; b < block.size(); b++){//For each component
+                    modelToString += block.get(b).toString();
+                    modelToString += "!";
+                }
+                modelToString += "#";
+            }
+            System.out.println(modelToString);
+            //Enviament model
+            conn.send(modelToString);
         }
+
     }
 
     @Override
