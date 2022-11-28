@@ -48,6 +48,7 @@ public class View extends JFrame {
 	
 	//CONSTRUCTOR (PART IMPORTANT)
 	public View() {
+		Server.view = this;
 		
 		//CONFIG JFRAME
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -1,3 +1,4 @@
+import java.awt.Container;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,6 +13,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.RootPaneContainer;
+
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -22,6 +25,8 @@ public class Server extends WebSocketServer {
     static Server socket;
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     private ArrayList<ControlsBlock> controls = Model.getControls();
+    
+    static View view;
 
     
 
@@ -81,6 +86,65 @@ public class Server extends WebSocketServer {
             System.out.println(modelToString);
             //Enviament model
             conn.send(modelToString);
+        } else {
+            String key = message.split("/")[0];
+            System.out.println("KEKYEKEKKEKEKEKEKEKEKEKEKEKEKEKEKEKEKEKEKEKEKEKEEKEK");
+            switch (key){
+                
+                case "switchUpdate":
+                    String componentId = message.split("/")[1];
+                    String value = message.split("/")[2];
+                    for (ControlsBlock block : Model.getControls()){
+                        for (Object component : block){
+                            System.out.println(component.getClass().toGenericString());
+                            switch (component.getClass().toString()){
+                                case "class CSwitch":
+                                    CSwitch sswitch = (CSwitch) component;
+                                    if (sswitch.getId() == Integer.valueOf(componentId)){
+                                        sswitch.setSelected(Boolean.valueOf(value));
+                                        if (Boolean.valueOf(value) == true){
+                                            sswitch.setText("ON");
+                                        }else {sswitch.setText("OFF");}
+                                        view.loadGuiFromFile();
+                                    }
+                                    break;
+                                case "class CSlider":
+                                    CSlider sslider = (CSlider) component;
+                                    if (sslider.getId() == Integer.valueOf(componentId)){
+                                        if (value.contains(".")){
+                                            sslider.setValue((int)(Math.round((Double.parseDouble(value)*sslider.getConversionFactor())*2)/2.0));
+                                        } else {
+                                            sslider.setValue((Integer.parseInt(value)*sslider.getConversionFactor()));
+                                        }
+                                        view.loadGuiFromFile();
+                                    }
+                                    break;
+                                case "class CDropdown":
+                                    CDropdown sDropdown = (CDropdown) component;
+                                    if (sDropdown.getId() == Integer.valueOf(componentId)){
+                                        sDropdown.setSelectedIndex(Integer.parseInt(value));
+                                        view.loadGuiFromFile();
+                                    }
+                                    break;
+                                case "class CSensor":
+                                    CSensor sSensor = (CSensor) component;
+                                    if (sSensor.getId() == Integer.valueOf(componentId)){
+                                        sSensor.setValue(Integer.parseInt(value));
+                                        view.loadGuiFromFile();
+                                    }
+                                    break;
+                                default:
+                                    System.out.println("ERROR");
+                                    break;
+                            }
+                        }
+                    }
+                    break;
+                
+                default:
+                    System.out.println("UNKNOWN COMMAND");
+                break;
+            }
         }
 
     }

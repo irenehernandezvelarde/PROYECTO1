@@ -1,0 +1,112 @@
+<root>
+    
+    <controls name="block1">
+        <switch id="0" default="on">Power</switch>
+        <slider id="0" default="4.5" min="0" max="10" step="0.5">Tilt degree</slider>
+        <dropdown id="0" default="0" label="Power use">
+            <option value="1">Performance</option>
+            <option value="2">Energy saving</option>
+        </dropdown>
+        <sensor id="0" units="ºC" thresholdlow="5" thresholdhigh="10">Temperature</sensor>
+    </controls>
+    
+    <controls name="block2">
+        <switch id="1" default="on">Power</switch>
+        <slider id="1" default="4.5" min="0" max="10" step="0.5">Tilt degree</slider>
+        <dropdown id="1" default="0" label="Power use">
+            <option value="3">Performance</option>
+            <option value="4">Energy saving</option>
+        </dropdown>
+        <sensor id="1" units="ºC" thresholdlow="5" thresholdhigh="10">Temperature</sensor>
+    </controls>
+
+    <controls name="block3">
+        <switch id="2" default="on">Power</switch>
+        <slider id="2" default="4.5" min="0" max="10" step="0.5">Tilt degree</slider>
+        <dropdown id="2" default="0" label="Power use">
+            <option value="5">Performance</option>
+            <option value="6">Energy saving</option>
+        </dropdown>
+        <sensor id="2" units="ºC" thresholdlow="5" thresholdhigh="10">Temperature</sensor>
+    </controls>
+    
+    <controls name="block4">
+        <switch id="3" default="on">Power</switch>
+        <slider id="3" default="4.5" min="0" max="10" step="0.5">Tilt degree</slider>
+        <dropdown id="3" default="0" label="Power use">
+            <option value="7">Performance</option>
+            <option value="8">Energy saving</option>
+        </dropdown>
+        <sensor id="3" units="ºC" thresholdlow="5" thresholdhigh="10">Temperature</sensor>
+    </controls>
+
+    <controls name="block5">
+        <switch id="4" default="on">Power</switch>
+        <slider id="4" default="4.5" min="0" max="10" step="0.5">Tilt degree</slider>
+        <dropdown id="4" default="0" label="Power use">
+            <option value="9">Performance</option>
+            <option value="10">Energy saving</option>
+        </dropdown>
+        <sensor id="4" units="ºC" thresholdlow="5" thresholdhigh="10">Temperature</sensor>
+    </controls>
+    
+    <controls name="block6">
+        <switch id="5" default="on">Power</switch>
+        <slider id="5" default="4.5" min="0" max="10" step="0.5">Tilt degree</slider>
+        <dropdown id="5" default="0" label="Power use">
+            <option value="11">Performance</option>
+            <option value="12">Energy saving</option>
+        </dropdown>
+        <sensor id="5" units="ºC" thresholdlow="5" thresholdhigh="10">Temperature</sensor>
+    </controls>
+
+    <controls name="block7">
+        <switch id="6" default="on">Power</switch>
+        <slider id="6" default="4.5" min="0" max="10" step="0.5">Tilt degree</slider>
+        <dropdown id="6" default="0" label="Power use">
+            <option value="13">Performance</option>
+            <option value="14">Energy saving</option>
+        </dropdown>
+        <sensor id="6" units="ºC" thresholdlow="5" thresholdhigh="10">Temperature</sensor>
+    </controls>
+    
+    <controls name="block8">
+        <switch id="7" default="on">Power</switch>
+        <slider id="7" default="4.5" min="0" max="10" step="0.5">Tilt degree</slider>
+        <dropdown id="7" default="0" label="Power use">
+            <option value="15">Performance</option>
+            <option value="16">Energy saving</option>
+        </dropdown>
+        <sensor id="7" units="ºC" thresholdlow="5" thresholdhigh="10">Temperature</sensor>
+    </controls>
+
+    <controls name="block9">
+        <switch id="8" default="on">Power</switch>
+        <slider id="8" default="4.5" min="0" max="10" step="0.5">Tilt degree</slider>
+        <dropdown id="8" default="0" label="Power use">
+            <option value="17">Performance</option>
+            <option value="18">Energy saving</option>
+        </dropdown>
+        <sensor id="8" units="ºC" thresholdlow="5" thresholdhigh="10">Temperature</sensor>
+    </controls>
+    
+    <controls name="block10">
+        <switch id="9" default="on">Power</switch>
+        <slider id="9" default="4.5" min="0" max="10" step="0.5">Tilt degree</slider>
+        <dropdown id="9" default="0" label="Power use">
+            <option value="19">Performance</option>
+            <option value="20">Energy saving</option>
+        </dropdown>
+        <sensor id="9" units="ºC" thresholdlow="5" thresholdhigh="10">Temperature</sensor>
+    </controls>
+    <controls name="block11">
+        <switch id="10" default="on">Power</switch>
+        <slider id="10" default="4.5" min="0" max="10" step="0.5">Tilt degree</slider>
+        <dropdown id="10" default="0" label="Power use">
+            <option value="21">Performance</option>
+            <option value="22">Energy saving</option>
+        </dropdown>
+        <sensor id="10" units="ºC" thresholdlow="5" thresholdhigh="10">Temperature</sensor>
+    </controls>
+    
+</root>
